@@ -1,21 +1,21 @@
 {
   "development": {
     "username": "postgres",
-    "password": delta34,
+    "password": "delta34",
     "database": "prueba",
     "host": "104.197.110.163",
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
-    "password": delta34,
+    "password": "delta34",
     "database": "prueba",
     "host": "104.197.110.163",
     "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
-    "password": delta34,
+    "password": "delta34",
     "database": "prueba",
     "host": "104.197.110.163",
     "dialect": "postgres"
