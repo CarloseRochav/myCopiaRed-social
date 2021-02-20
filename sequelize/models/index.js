@@ -1,4 +1,4 @@
-"use strict";
+"use strict"; //Estableciendo conexcion con sequelize
 
 const fs = require("fs");
 const path = require("path");

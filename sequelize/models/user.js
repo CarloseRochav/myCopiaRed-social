@@ -1,3 +1,4 @@
+//Definicion de modelo Usuario
 'use strict';
 const {
   Model
