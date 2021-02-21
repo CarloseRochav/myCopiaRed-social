@@ -2,27 +2,39 @@ const express = require("express");
 const cors = require("cors");
 const sequelize = require("./sequelize/models/index");
 const bodyParser = require('body-parser');//Importo bodyParser
+const {User} = require('./sequelize/models/user');//Importar modelo 
 
 // Crear el servidor
 const app = express();
 
 //Uso de bodyP
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}))//parse application/x-www-form-urlenconded
+app.use(bodyParser.json());//parse applicarion/json
 
 // habilitar cors
 app.use(cors());
 
 // Ruta a lista de Perfiles de Usuario ; GET
-app.get('/usuarios',(req,res)=>{
-  
+app.get('/usuarios',(req,res)=>{  
   res.send("GET / perfil")
 })
 
 // Ruta para crear un nuevo usuario ; POST
 app.post('/usuarios/nuevo',(req,res)=>{
-  console.log(`Peticion recibida : ${req.body}`);
-  res.send("POST / usuarios/nuevo");
+  //console.log(req.body);
+   User.create(req.body
+  {
+    name:req.body.name,
+    picture:req.body.picture,
+    birth:req.body.birth,
+    email:req.body.email,
+    phone:req.body.phone,
+    adress:req.body.adress,
+    roll:req.body.roll,    
+  }
+  ).then(usuario=>{
+    res.send("POST / usuarios/nuevo");
+  }).catch(err=>{console.log("ERROR AL GUARDAR DATOS")});
 })
 
 // Ruta a un perfil mediante su id ; GET
