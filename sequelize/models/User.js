@@ -23,7 +23,7 @@ User.init(
         unique:true
             }, 
       phone:{                                   //Phone
-        type:DataTypes.STRING,
+        type:DataTypes.INTEGER,
         allowNull:false,
         unique:false
             },
