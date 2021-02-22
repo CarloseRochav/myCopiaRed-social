@@ -24,13 +24,13 @@ app.post("/usuarios/nuevo", (req, res) => {
   //console.log(req.body);
   console.log(User);
   User.create(req.body, {
-    name: req.body.name
-    //picture: req.body.picture,
-    // birth: req.body.birth,
-    // email: req.body.email,
-    // phone: req.body.phone,
-    // adress: req.body.adress,
-    // roll: req.body.roll
+    name: req.body.name,
+    picture: req.body.picture,
+    birth: req.body.birth,
+    email: req.body.email,
+    phone: req.body.phone,
+    adress: req.body.adress,
+    roll: req.body.roll
   })
     .then((usuario) => {
       res.send("POST / usuarios/nuevo");
@@ -64,7 +64,7 @@ app.listen(port, "0.0.0.0", () => {
 
   // Contectandose a la base de datos
   sequelize
-    .sync({ force: false })
+    .sync({ force: true })//Sincroniza el modelo con la base de datos false || true
     .then(() => {
       console.log("Conectado a la base de datos");
     })
