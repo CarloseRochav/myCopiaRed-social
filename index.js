@@ -3,6 +3,8 @@ const cors = require("cors");
 const sequelize = require("./sequelize/models/index");
 const bodyParser = require("body-parser"); //Importo bodyParser
 const User = require("./sequelize/models/User"); //Importar modelo
+const multer = require('multer');//Multer
+const upload = multer({dest:'storage/images/'})//Upload
 
 // Crear el servidor
 const app = express();
@@ -27,9 +29,10 @@ app.get("/usuarios", (req, res) => {
 });
 
 // Ruta para crear un nuevo usuario ; POST
-app.post("/usuarios/nuevo", (req, res) => {
+app.post("/usuarios/nuevo",upload.single('image'), (req, res) => {//Middleware
   //console.log(req.body);
   console.log(User);
+  console.log(req.file);
   console.log(req.body);
   User.create({
     name: req.body.name,
