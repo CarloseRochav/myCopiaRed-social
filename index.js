@@ -1,10 +1,16 @@
 const express = require("express");
 const cors = require("cors");
+<<<<<<< HEAD
 const sequelize = require("./sequelize/models/index");
 const bodyParser = require("body-parser"); //Importo bodyParser
 const User = require("./sequelize/models/User"); //Importar modelo
 const multer = require('multer');//Multer
 const upload = multer({dest:'storage/images/'})//Upload
+=======
+const bodyParser = require("body-parser"); //Import bodyParser
+const sequelize = require("./sequelize/models/");
+const { userRoutes } = require("./api/routes"); //Import Routes
+>>>>>>> master
 
 // Crear el servidor
 const app = express();
@@ -16,6 +22,7 @@ app.use(bodyParser.json()); //parse applicarion/json
 // habilitar cors
 app.use(cors());
 
+<<<<<<< HEAD
 // Ruta a lista de Perfiles de Usuario ; GET
 app.get("/usuarios", (req, res) => {
   User.findAll()
@@ -99,8 +106,13 @@ app.delete("/usuarios/:id", (req, res) => {
       })
 });
 
+=======
+>>>>>>> master
 // puerto de la app
 const port = process.env.PORT || 8080;
+
+// Importar rutas
+app.use(userRoutes);
 
 //Arrancamos APP
 app.listen(port, "0.0.0.0", () => {
