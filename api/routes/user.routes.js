@@ -11,6 +11,7 @@ router.post(
   "/usuarios/nuevo",
   [
     check("name", "El nombre es obligatorio").not().isEmpty(),
+    check("password", "Contrasena no valida").notEmpty().isStrongPassword(),
     check("picture", "Agrega una imagen"),
     check("birth", "La fecha de nacimiento obligatorio").not().isEmpty(),
     check("email", "Agrega un correo valido").isEmail(),

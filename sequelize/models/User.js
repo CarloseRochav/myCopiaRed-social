@@ -12,7 +12,15 @@ User.init(
       allowNull: false,
       unique: false,
     },
-    picture: DataTypes.STRING, //Picture
+    password: {
+      //Password
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    picture: {
+      type: DataTypes.STRING,
+    },
+    //Picture
     birth: {
       type: DataTypes.DATE,
       allowNull: true,

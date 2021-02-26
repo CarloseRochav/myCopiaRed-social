@@ -1,5 +1,7 @@
 const User = require("../../sequelize/models/User");
 const { validationResult } = require("express-validator");
+const bcryptjs = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 exports.createUser = async (req, res) => {
   const errors = validationResult(req);
@@ -10,6 +12,7 @@ exports.createUser = async (req, res) => {
   try {
     await User.create({
       name: req.body.name,
+      password: req.body.password,
       picture: req.body.picture,
       birth: req.body.birth,
       email: req.body.email,
@@ -19,7 +22,7 @@ exports.createUser = async (req, res) => {
     });
     res.status(201).send("The new user has been created.");
   } catch (error) {
-    res.status(500).send("An error has occurred with the server.");
+    res.status(500).send("An error has occurred with the server." + error);
   }
 };
 
@@ -48,10 +51,16 @@ exports.updateUser = async (req, res) => {
   console.log(newUser);
   try {
     const user = await User.findOne({ where: { id: userId } });
-    await user.update(newUser);
-    res.status(200).send("User data has been updated.");
+    try {
+      await user.update(newUser);
+      res.status(200).send("User data has been updated.");
+    } catch (error) {
+      res.status(500).send("An error has occurred with the server.");
+    }
   } catch (error) {
-    res.status(500).send("An error has occurred with the server.");
+    res
+      .status(500)
+      .send("An error has occurred with the server. Usuario no encontrado");
   }
 };
 

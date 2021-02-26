@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser"); //Import bodyParser
-const sequelize = require("./sequelize/models/");
+const sequelize = require("./sequelize/models");
 const { userRoutes } = require("./api/routes"); //Import Routes
 
 // Crear el servidor
@@ -26,7 +26,7 @@ app.listen(port, "0.0.0.0", () => {
 
   // Contectandose a la base de datos
   sequelize
-    .sync({ force: false }) //Sincroniza el modelo con la base de datos false || true
+    .sync({ force: true }) //Sincroniza el modelo con la base de datos false || true
     .then(() => {
       console.log("Conectado a la base de datos");
     })
