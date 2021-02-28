@@ -1,30 +1,4 @@
-const User = require("../../sequelize/models/User");
-const { validationResult } = require("express-validator");
-const bcryptjs = require("bcrypt");
-const jwt = require("jsonwebtoken");
-
-exports.createUser = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  try {
-    await User.create({
-      name: req.body.name,
-      password: req.body.password,
-      picture: req.body.picture,
-      birth: req.body.birth,
-      email: req.body.email,
-      phone: req.body.phone,
-      adress: req.body.adress,
-      roll: req.body.roll,
-    });
-    res.status(201).send("The new user has been created.");
-  } catch (error) {
-    res.status(500).send("An error has occurred with the server." + error);
-  }
-};
+const { User } = require("../models/");
 
 exports.getUsers = async (req, res) => {
   try {

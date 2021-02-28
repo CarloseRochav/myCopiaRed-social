@@ -1,31 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const { check } = require("express-validator");
 const { userController } = require("../controllers");
+const { authMiddleware } = require("../middlewares");
 
 router.get("/usuarios", userController.getUsers);
 
 router.get("/usuarios/:id", userController.getUserById);
 
-router.post(
-  "/usuarios/nuevo",
-  [
-    check("name", "El nombre es obligatorio").not().isEmpty(),
-    check("password", "Contrasena no valida").notEmpty().isStrongPassword(),
-    check("picture", "Agrega una imagen"),
-    check("birth", "La fecha de nacimiento obligatorio").not().isEmpty(),
-    check("email", "Agrega un correo valido").isEmail(),
-    check("phone", "Agrega un telefono valido"),
-    check("address", "Agrega una direccion"),
-    check("roll", "El roll es obligatorio").not().isEmpty(),
-  ],
-  userController.createUser
-);
-
-router.post("/usuarios/:id");
-
 router.put("/usuarios/:id", userController.updateUser);
 
 router.delete("/usuarios/:id", userController.deleteUser);
+
+//Perfil
+router.get("/usuario/profile/:id", authMiddleware, (req, res) => {
+  res.status(200).send("User Profile " + req.params.id);
+});
 
 module.exports = router;
