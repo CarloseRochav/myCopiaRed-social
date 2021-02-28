@@ -1,5 +1,5 @@
 const path = require('path');
 
 module.exports = {
-  "models-path": path.resolve('./sequelize/models'),
+  "models-path": path.resolve('./api/models'),
 };
