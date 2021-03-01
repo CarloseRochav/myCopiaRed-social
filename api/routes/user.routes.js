@@ -1,17 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const { check } = require("express-validator");
 const { userController } = require("../controllers");
+<<<<<<< HEAD
 const bodyParser = require('body-parser');
 
 //Uso de bodyP
 router.use(bodyParser.urlencoded({ extended: false })); //parse application/x-www-form-urlenconded
 router.use(bodyParser.json()); //parse applicarion/json
+=======
+const { authMiddleware } = require("../middlewares");
+>>>>>>> master
 
 router.get("/usuarios", userController.getUsers);
 
 router.get("/usuarios/:id", userController.getUserById);
 
+<<<<<<< HEAD
 router.post(
   "/usuarios/nuevo",(req,res)=>{
   [
@@ -38,7 +42,15 @@ router.put("/usuarios/:id",[
   check("roll","Selecciona un roll").not.notEmpty(),
 
 ], userController.updateUser);
+=======
+router.put("/usuarios/:id", userController.updateUser);
+>>>>>>> master
 
 router.delete("/usuarios/:id", userController.deleteUser);
+
+//Perfil
+router.get("/usuario/profile/:id", authMiddleware, (req, res) => {
+  res.status(200).send("User Profile " + req.params.id);
+});
 
 module.exports = router;
