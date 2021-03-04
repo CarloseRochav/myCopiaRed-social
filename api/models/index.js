@@ -7,13 +7,16 @@ const config = require("../../config/dbConfig/development");
 const db = {};
 
 // Creamos nuestra conexión
-let sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  config
-);
-
+const sequelize = new Sequelize(config.URL, {
+  dialect: "postgres",
+  protocol: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
+});
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
