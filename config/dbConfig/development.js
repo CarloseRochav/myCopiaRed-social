@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const {
   DB_UserName,
   DB_Password,
@@ -12,3 +13,10 @@ module.exports = {
   host: DB_Host,
   dialect: "postgres",
 };
+=======
+const { DATABASE_URL } = require("../enviromentVars");
+
+module.exports = {
+  URL: DATABASE_URL,
+};
+>>>>>>> master
