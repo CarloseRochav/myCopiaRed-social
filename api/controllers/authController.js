@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { secret, expires, rounds } = require("../../config/auth");
 const { User } = require("../models/");
+const { formatError } = require("../helpers");
 
 exports.signUp = async (req, res) => {
   const hashPassword = bcrypt.hashSync(req.body.password, +rounds);
@@ -20,7 +21,8 @@ exports.signUp = async (req, res) => {
 
     res.status(201).send("The new user has been created.");
   } catch (error) {
-    res.status(500).send("There is already a user created with this email");
+    //const messageResponse = formatError(error, 500);
+    res.status(500).send(error);
   }
 };
 

@@ -26,6 +26,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
+          notNull: {
+            msg: "La contraseña no tiene que ser null",
+          },
           len: {
             args: [6, 255],
             msg: "La contraseña tiene que tener minimamente 6 caracteres",
@@ -48,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         validate: {
           isEmail: {
-            msg: "El email tiene que ser un correo valido",
+            msg: "El email tiene que ser un correo valido.",
           },
         },
       },
@@ -57,6 +60,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BIGINT,
         allowNull: false,
         unique: false,
+        validate: {
+          isNumeric: {
+            msg: "El numero telefonico tiene que ser valido.",
+          },
+        },
       },
       address: {
         //Direccion
