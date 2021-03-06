@@ -6,7 +6,6 @@ const { formatError } = require("../helpers");
 
 exports.signUp = async (req, res) => {
   const hashPassword = bcrypt.hashSync(req.body.password, +rounds);
-
   try {
     await User.create({
       name: req.body.name,
