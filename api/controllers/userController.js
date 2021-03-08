@@ -29,16 +29,11 @@ exports.updateUser = async (req, res) => {
   const newUser = req.body;
   try {
     const user = await User.findOne({ where: { id: userId } });
-    try {
-      await user.update(newUser);
-      const messageResponse = formatMessage(200, user);
-      res.status(200).send(messageResponse);
-    } catch (error) {
-      const messageResponse = formatError(error, 500, null);
-      res.status(500).send(messageResponse);
-    }
+    await user.update(newUser);
+    const messageResponse = formatMessage(200, user);
+    res.status(200).send(messageResponse);
   } catch (error) {
-    const messageResponse = formatError(error, 500, null);
+    const messageResponse = formatError(null, 500, "User does not exist");
     res.status(500).send(messageResponse);
   }
 };
