@@ -18,6 +18,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  // const roles = async () => {
+  //   Role.create({ name: "Administrador", description: "Admin" });
+  //   Role.create({ name: "Auxiliar", description: "Usuario Auxiliar" });
+  //   Role.create({ name: "VIP", description: "Usuario VIP" });
+  //   Role.create({ name: "Normal", description: "Usuario comun" });
+  // };
+
+  // roles();
+
   Role.associate = function (models) {
     Role.hasMany(models.User, {
       foreignKey: "role_id",
