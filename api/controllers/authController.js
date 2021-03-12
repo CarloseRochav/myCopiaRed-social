@@ -3,10 +3,10 @@ const jwt = require("jsonwebtoken");
 const { secret, expires, rounds } = require("../../config/auth");
 const { User } = require("../models/");
 const { formatError, formatMessage } = require("../helpers");
-//Requiero nodemailer
-const {info}=require("./nodeMailer");
+const {}
 
-exports.signUp = async (req, res) => {
+
+exports.signUp = async (req, res) => { //Asincrono
   const hashPassword = bcrypt.hashSync(req.body.password, +rounds);
   try {
     await User.create({
@@ -18,10 +18,13 @@ exports.signUp = async (req, res) => {
       phone: req.body.phone,
       address: req.body.address,
       role_id: req.body.role,
-    },info());
+    });
     const messageResponse = formatMessage(
       201,
       "The new user has been created."
+      //->NodeMailer
+
+      //<-
     );
     res.status(201).send(messageResponse);
   } catch (error) {

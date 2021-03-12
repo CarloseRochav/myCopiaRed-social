@@ -1,35 +1,35 @@
-const nodeMailer = require('nodemailer');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+//Para entorno de variables
 
+//Transporter Step 1
+let transporter = nodemailer.createTransport({ 
+	service: 'gmail', 
+	auth: {
+		user:process.env.EMAIL,//process.env.EMAIL, 
+		pass:process.env.PASS//process.env.PASS
+		}
+	});
 
-// create reusable transporter object using the default SMTP transport
-let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: "anastasia.wolff70@ethereal.email", // generated ethereal user
-      pass: "aFUGT2HpWZ5HavG9Yc", // generated ethereal password
-    },
-  });
+//Step 2
+let mailOptions = { 
+	from:'rochavawave@gmail.com' , 
+	to:'playamouth@gmail.com', 
+	subject: 'Prueba de envio', 
+	text: 'Hola Bienvenido'
+};
 
-  const mailOptions ={ //Exporto cada uno de los metodos
-    from: '"Equipo de Back-end 👻" <api@example.com>', // sender address
-    to: "cerv.powerful@gmail.com", // list of receivers
-    subject: "Registro exitoso ✔", // Subject line
-    text: "Bienvenido!!", // plain text body
-    html: "<b>Hello world?</b>", // html body
-  }
+//Step 3
+// const mail= await ransporter.sendMail(mailOptions,function(err,data){//Guardo en una variable para ejecutar en otra parte
+// 	if(err){
+// 		console.log(`Ha ocurriod un error de tipo ${err}`);
+// 	}
+// 	else{
+// 		console.log("Email enviado de manera satisfactoria");
+// 	}
+// });
 
-  // send mail with defined transport object
-let info = await transporter.sendMail(mailOptions,(error,info)=>{
-    if (error){
-        res.status(500).send(error.message);
-    }
-    else{
-        console.log("Email enviado");
-        res.status(200).json(req.body);
-    }
-  });
-
-  module.exports = info;
-
+//module.exports=sendEmail; //Exportar esta funcion para usu futuro
+module.exports={
+  transporter,mailOptions
+}
