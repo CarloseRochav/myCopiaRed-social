@@ -3,7 +3,8 @@ const jwt = require("jsonwebtoken");
 const { secret, expires, rounds } = require("../../config/auth");
 const { User } = require("../models/");
 const { formatError, formatMessage } = require("../helpers");
-const {}
+const {transporter, mailOptions} = require('./nodeMailer');
+
 
 
 exports.signUp = async (req, res) => { //Asincrono
@@ -22,11 +23,14 @@ exports.signUp = async (req, res) => { //Asincrono
     const messageResponse = formatMessage(
       201,
       "The new user has been created."
-      //->NodeMailer
-
-      //<-
+    
     );
-    res.status(201).send(messageResponse);
+        mailOptions.to=req.body.email;//Correo del registrado
+        res.status(201).send(messageResponse);// -> NodeMailer
+        transporter.sendMail(mailOptions,(err,inf)=>{
+          if(err)console.log("Ocurrio al enviar emial al registrado");
+          else console.log("Mensaje de confirmacion enviado de manera exitosa");
+    })
   } catch (error) {
     const messageResponse = formatError(error, 500, null);
     res.status(500).send(messageResponse);
@@ -48,17 +52,17 @@ exports.signIn = async (req, res) => {
     if (bcrypt.compareSync(password, user.password)) {
       const id = user.id;
       const userPassword = user.password;
-      const token = jwt.sign(
-        { user: { id, password: userPassword, email } },
-        secret,
-        {
-          expiresIn: expires,
-        }
-      );
+        const token = jwt.sign(
+          { user: { id, password: userPassword, email } },
+          secret,
+          {
+            expiresIn: expires,
+          }
+        );
       res.json({
         code: 201,
         user: { email, password },
-        token: token,
+        token: token, 
       });
     } else {
       const messageResponse = formatError(
