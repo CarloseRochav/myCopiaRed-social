@@ -3,3 +3,4 @@ module.exports = {
   authController: require("./authController"),
   mediaController: require("./mediaController"),
 };
+

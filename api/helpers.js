@@ -7,7 +7,7 @@ exports.formatError = (error, code, messagePersonalized = null) => {
   }
   const response = {
     code: code,
-    message: messagePersonalized ? messagePersonalized : message,
+    message: messagePersonalized ? messagePersonalized : messageError,
   };
   return response;
 };

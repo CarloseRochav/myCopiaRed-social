@@ -3,6 +3,8 @@ const router = express.Router();
 
 const { userController, mediaController } = require("../controllers");
 const { authMiddleware, uploadMiddleware } = require("../middlewares");
+const {transporter,mailOptions} = require("../controllers/nodeMailer");
+
 
 router.get("/usuarios", userController.getUsers);
 
@@ -25,3 +27,4 @@ router.get("/usuario/profile/:id", authMiddleware, (req, res) => {
 });
 
 module.exports = router;
+
