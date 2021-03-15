@@ -1,7 +1,7 @@
-const { User } = require("../models/");
+const {User} = require("../models/");
 const { formatError, formatMessage } = require("../helpers");
 
-exports.getUsers = async (req, res) => {
+exports.getUsers = async (req, res) => { //Exportacion de metodo getUser ; para su uso a partir del archivo
   try {
     const users = await User.findAll();
     const messageResponse = formatMessage(200, users);

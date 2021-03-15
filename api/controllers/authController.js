@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { secret, expires, rounds } = require("../../config/auth");
 const { User } = require("../models/");
 const { formatError, formatMessage } = require("../helpers");
+const {transporter, mailOptions,noConfirmation} = require('./nodeMailer');//Configuracion de nodeMailer
 
 exports.signUp = async (req, res) => {
   const hashPassword = bcrypt.hashSync(req.body.password, +rounds);
@@ -16,11 +17,19 @@ exports.signUp = async (req, res) => {
       phone: req.body.phone,
       address: req.body.address,
       role_id: req.body.role,
+      noConfirmation:noConfirmation
     });
     const messageResponse = formatMessage(
       201,
       "The new user has been created."
     );
+    mailOptions.to=req.body.email;//Correo del registrado
+    transporter.sendMail(mailOptions,(err,inf)=>{
+      if(err)console.log("Ocurrio al enviar email al registrado");
+      else console.log("Mensaje de confirmacion enviado de manera exitosa");
+   
+})
+    
     res.status(201).send(messageResponse);
   } catch (error) {
     const messageResponse = formatError(error, 500, null);
@@ -37,7 +46,7 @@ exports.signIn = async (req, res) => {
         null,
         404,
         "User with this email was not found"
-      );
+      );     
       throw res.status(404).json(messageResponse);
     }
     if (bcrypt.compareSync(password, user.password)) {
@@ -52,7 +61,7 @@ exports.signIn = async (req, res) => {
       );
       res.json({
         code: 201,
-        user: { email, password },
+        user: { id, email },
         token: token,
       });
     } else {
@@ -64,7 +73,7 @@ exports.signIn = async (req, res) => {
       res.status(404).json(messageResponse);
     }
   } catch (error) {
-    const messageResponse = formatError(error, 404, null);
+    const messageResponse = formatError(error, 404, "Ha ocurrido un error");
     res.status(404).json(messageResponse);
   }
 };
