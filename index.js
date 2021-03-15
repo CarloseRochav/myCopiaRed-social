@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser"); //Import bodyParser
 const { sequelize } = require("./api/models");
 const { userRoutes, authRoutes } = require("./api/routes"); //Import Routes
+const {Role} = require('./api/models/')
 
 // Crear el servidor
 const app = express();
@@ -35,3 +36,8 @@ app.listen(port, "0.0.0.0", () => {
       console.log("No se ha conectado a la base de datos" + error);
     });
 });
+
+// Role.create({
+//   name:"Normal",
+//   description:"Usuario comun"
+// })

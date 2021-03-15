@@ -1,16 +1,15 @@
 const jwt = require("jsonwebtoken"); //Libreria de JWT
 const { secret } = require("../../config/auth");//Configuracion ; Secret...
 
-module.exports = (req, res, next) => {
+module.exports = (req, res, next) => {//Esto se necesita
   console.log(req.headers);
 
   // Comprobar que existe el token
   if (!req.headers.authorization) {
     res.status(401).json({ msg: "Acceso no autorizado" });
   } else {
-    const token = req.headers.authorization.split(" ")[1];
-    console.log(`El valor actual del token con verify: ${token}`);//Valor del token 
-
+    const token = req.headers.authorization.split(" ")[1];     
+    
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
         res.status(500).json({
@@ -24,3 +23,6 @@ module.exports = (req, res, next) => {
     });
   }
 };
+
+// Exportar toda esta configuracion para poder usarla con su metodo verify;
+// Contiene la configuracion para Decodificar el tokem

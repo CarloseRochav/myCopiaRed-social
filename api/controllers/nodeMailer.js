@@ -11,13 +11,22 @@ let transporter = nodemailer.createTransport({
 		}
 	});
 
+	const noConfirmation =173652;
+
+	contentMail=`
+		 Bienvenido 
+		Tu numero de confirmacion 
+		Tu numero de confirmacion es : ${noConfirmation}
+	
+	`;
 //Step 2
 let mailOptions = { 
 	from:'rochavawave@gmail.com' , 
 	to:'playamouth@gmail.com', 
 	subject: 'Prueba de envio', 
-	text: 'Hola Bienvenido'
+	text: contentMail
 };
+
 
 //Step 3
 // const mail= await ransporter.sendMail(mailOptions,function(err,data){//Guardo en una variable para ejecutar en otra parte
@@ -31,5 +40,5 @@ let mailOptions = {
 
 //module.exports=sendEmail; //Exportar esta funcion para usu futuro
 module.exports={
-  transporter,mailOptions
+  transporter,mailOptions,noConfirmation
 }

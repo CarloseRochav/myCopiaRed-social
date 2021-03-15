@@ -15,15 +15,15 @@ router.put("/usuarios/:id", userController.updateUser);
 router.delete("/usuarios/:id", userController.deleteUser);
 
 //Para pruebas con nodeMailer
-router.get("/send-email",(req,res)=>{transporter.sendMail(mailOptions,(err,inf)=>{
-        if(err){
-          console.log(`Existe un error de tipo ${err}`);
-        }
-        else{
-          console.log("Mail enviado de manera exitosa");
-          res.send("Email Enviado BRO");
-        }
-})});
+// router.get("/send-email",(req,res)=>{transporter.sendMail(mailOptions,(err,inf)=>{
+//         if(err){
+//           console.log(`Existe un error de tipo ${err}`);
+//         }
+//         else{
+//           console.log("Mail enviado de manera exitosa");
+//           res.send("Email Enviado BRO");
+//         }
+// })});
 
 //Perfil
 router.get("/usuario/profile/:id", authMiddleware, (req, res) => {
