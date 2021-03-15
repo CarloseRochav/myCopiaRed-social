@@ -52,7 +52,7 @@ exports.signIn = async (req, res) => {
       );
       res.json({
         code: 201,
-        user: { email, password },
+        user: { id, email },
         token: token,
       });
     } else {
@@ -64,7 +64,7 @@ exports.signIn = async (req, res) => {
       res.status(404).json(messageResponse);
     }
   } catch (error) {
-    const messageResponse = formatError(error, 404, null);
+    const messageResponse = formatError(error, 404, "Ha ocurrido un error");
     res.status(404).json(messageResponse);
   }
 };
