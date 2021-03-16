@@ -19,3 +19,11 @@ exports.formatMessage = (code, messagePersonalized = "") => {
   };
   return response;
 };
+
+exports.random = () => {
+  var x = "";
+  for (var i = 0; i < 6; i++) {
+    x += Math.floor(Math.random() * 10);
+  }
+  return x;
+};

@@ -8,17 +8,11 @@ const s3 = new AWS.S3({
   secretAccessKey: awsConfig.secretAccessKey,
 });
 
-exports.updateProfileUser = async (req, res) => {
-  const { user } = req.user;
-  const { id: _id } = user;
-  let myFile = req.file.originalname.split(".");
-  const fileType = myFile[myFile.length - 1];
-  let location;
-
+exports.updateImageProfile = async (fileType, buffer, _id, res) => {
   const params = {
     Bucket: awsConfig.bucket,
     Key: `${uuidv4()}.${fileType}`,
-    Body: req.file.buffer,
+    Body: buffer,
   };
 
   s3.upload(params, async (error, data) => {
@@ -26,10 +20,9 @@ exports.updateProfileUser = async (req, res) => {
       res.status(500).send(error);
     }
     const { Location } = data;
-    location = Location;
 
     await User.update(
-      { picture: location },
+      { picture: Location },
       {
         where: {
           id: _id,
@@ -38,5 +31,7 @@ exports.updateProfileUser = async (req, res) => {
     );
   });
 
-  res.status(200).send("yey");
+  res
+    .status(201)
+    .json({ code: 201, msg: "Se ha actualizado la imagen de perfil" });
 };

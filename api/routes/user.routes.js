@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const { userController, mediaController } = require("../controllers");
+const { userController } = require("../controllers");
 const { authMiddleware, uploadMiddleware } = require("../middlewares");
-const {transporter,mailOptions} = require("../controllers/nodeMailer");
-
 
 router.get("/usuarios", userController.getUsers);
 
@@ -18,13 +16,12 @@ router.post(
   "/usuarios/profilephoto",
   authMiddleware,
   uploadMiddleware,
-  mediaController.updateProfileUser
+  userController.updateImageProfileUser
 );
 
-//Perfil
+//  Perfil
 router.get("/usuario/profile/:id", authMiddleware, (req, res) => {
   res.status(200).send("User Profile " + req.params.id);
 });
 
 module.exports = router;
-
