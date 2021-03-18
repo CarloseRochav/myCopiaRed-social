@@ -2,11 +2,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { secret, expires, rounds } = require("../../config/auth");
 const { User } = require("../models/");
-const { formatError, formatMessage } = require("../helpers");
-const {transporter, mailOptions,noConfirmation} = require('./nodeMailer');//Configuracion de nodeMailer
+const { formatError, formatMessage, random } = require("../helpers");
+const { mailerService } = require("../services/");
 
 exports.signUp = async (req, res) => {
   const hashPassword = bcrypt.hashSync(req.body.password, +rounds);
+  const randomNumber = random();
   try {
     await User.create({
       name: req.body.name,
@@ -16,23 +17,21 @@ exports.signUp = async (req, res) => {
       email: req.body.email,
       phone: req.body.phone,
       address: req.body.address,
-      role_id: req.body.role,
-      noConfirmation:noConfirmation
+      role_id: req.body.role ? req.body.role : 4,
+      noConfirmation: randomNumber,
     });
+    mailerService.sendEmail(req.body.email, randomNumber);
     const messageResponse = formatMessage(
       201,
       "The new user has been created."
     );
-    mailOptions.to=req.body.email;//Correo del registrado
-    transporter.sendMail(mailOptions,(err,inf)=>{
-      if(err)console.log("Ocurrio al enviar email al registrado");
-      else console.log("Mensaje de confirmacion enviado de manera exitosa");
-   
-})
-    
     res.status(201).send(messageResponse);
   } catch (error) {
-    const messageResponse = formatError(error, 500, null);
+    const messageResponse = formatError(
+      null,
+      500,
+      "Hay un error con los datos"
+    );
     res.status(500).send(messageResponse);
   }
 };
@@ -46,7 +45,7 @@ exports.signIn = async (req, res) => {
         null,
         404,
         "User with this email was not found"
-      );     
+      );
       throw res.status(404).json(messageResponse);
     }
     if (bcrypt.compareSync(password, user.password)) {
@@ -76,4 +75,17 @@ exports.signIn = async (req, res) => {
     const messageResponse = formatError(error, 404, "Ha ocurrido un error");
     res.status(404).json(messageResponse);
   }
+};
+
+exports.verifyUser = async (req, res) => {
+  const _code = req.params.code;
+  await User.update(
+    { isActivate: true },
+    {
+      where: {
+        noConfirmation: _code,
+      },
+    }
+  );
+  res.status(404).json({ code: 201, msg: "Usuario validado" });
 };

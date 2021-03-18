@@ -11,4 +11,6 @@ module.exports = {
   AWS_USER: process.env.AWS_USER,
   AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
   AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+  NODE_MAILER_EMAIL: process.env.NODE_MAILER_EMAIL,
+  NODE_MAILER_PASSWORD: process.env.NODE_MAILER_PASSWORD,
 };
