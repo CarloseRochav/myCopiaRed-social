@@ -14,14 +14,14 @@ module.exports = (sequelize, DataTypes) => {
     
     description: {
       //descripcion del video
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: true,
       unique: false,
     },
     
     video: {
       //video
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       unique: false,
     },
@@ -39,11 +39,7 @@ module.exports = (sequelize, DataTypes) => {
   
 );
 
-Post.associate = function (models) {
-  Post.hasMany(models.Comments, {
-      foreignKey: "post_id",
-    });
-  };
+
 return Post;
 };
 

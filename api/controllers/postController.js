@@ -1,6 +1,5 @@
-const { Post } = require("../models");
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const { formatMessage } = require("../helpers");
+const { Post, User } = require("../models");
 
 //cambie User por Post para adapaptarlo
 exports.getPost = async (req, res) => {
@@ -11,21 +10,26 @@ exports.getPost = async (req, res) => {
     res.status(500).send("An error has occurred with the server.");
   }
 };
-//no estoy muy seguro de este metodo, creo que le falta algo, investigar que falta
+
 exports.createPost = async (req, res) => {
-  const postId = req.params.id;
-  try {
+  const { user } = req.user;
+  const { id } = user;
+  const  userExist = await User.findByPk(id);
+  try { 
+    if(!userExist){
+      throw res.status(404).send("Usuario no existe");
+    }
     await Post.create({
       title: req.body.title,
       description: req.body.description,
-      user: req.body.user,
       video: req.body.video,
       reactions: req.body.reactions,
+      User_id: id,
     });
+    res.status(201).send("Post creado exitosamente ");
 
-    res.status(201).send("The new post has been created.");
   } catch (error) {
-    res.status(500).send("No se puede crear tu publicacion por alguna extraña razon ;( ");
+    res.status(500).send(error);  
   }
 };
 
@@ -39,31 +43,51 @@ exports.getPostById = async (req, res) => {
   }
 };
 
+
 exports.updatePost = async (req, res) => {
-  const postId = req.params.id;
+  const { user } = req.user;
+  const { id } = user; 
+  const userExist = await User.findByPk(id);
+
+  const postId  = req.params.id;
   const newPost = req.body;
-  console.log(newPost);
-  try {
-    const post = await Post.findOne({ where: { id: postId } });
+  const postExist = await Post.findByPk(postId);
     try {
+      if(!userExist){
+        throw res.status(404).send("Usuario no existe")
+      }
+      if(!postExist){
+        throw res.status(404).send("Publicación no existe")
+      }
+      const post = await Post.findOne({ where: { id: postId, User_id: id } });
+      if(!post){
+        throw res.status(400).send("Usuario incorrecto");
+      }
       await post.update(newPost);
-      res.status(200).send("User data has been updated.");
+      res.status(200).send("Post data has been updated.");
     } catch (error) {
       res.status(500).send("An error has occurred with the server.");
     }
-  } catch (error) {
-    res
-      .status(500)
-      .send("An error has occurred with the server. Usuario no encontrado");
-  }
-};
+  };
 
 exports.deletePost = async (req, res) => {
+  const { user } = req.user;
+  const { id } = user; 
+  const userExist = await User.findByPk(id);
+
   const postId = req.params.id;
+  const postExist = await Post.findByPk(postId);
+  
   try {
-    await Post.destroy({ where: { id: postId } });
-    res.status(200).send("User has been deleted.");
+    if(!userExist){
+      throw res.status(404).send("Usuario no existe")
+    }
+    if(!postExist){
+      throw res.status(404).send("Publicación no existe")
+    }
+    await Post.destroy({ where: { id: postId, User_id: id } });
+    res.status(200).send("Post has been deleted.");
   } catch (error) {
-    res.status(500).send("An error has occurred with the server.");
+    res.status(500).send(error);
   }
 };

@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser"); //Import bodyParser
 const { sequelize } = require("./api/models");
-const { userRoutes, authRoutes } = require("./api/routes"); //Import Routes
+const { userRoutes, authRoutes, postRoutes } = require("./api/routes"); //Import Routes
 
 // Crear el servidor
 const app = express();
@@ -20,6 +20,7 @@ const port = process.env.PORT || 8080;
 // Importar rutas
 app.use(authRoutes);
 app.use(userRoutes);
+app.use(postRoutes);
 
 //Arrancamos APP
 app.listen(port, "0.0.0.0", () => {
