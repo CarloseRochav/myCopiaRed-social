@@ -27,11 +27,17 @@ exports.signUp = async (req, res) => {
     );
     res.status(201).send(messageResponse);
   } catch (error) {
+    // const messageResponse = formatError(
+    //   null,
+    //   500,
+    //   "Hay un error con los datos"
+    // );
     const messageResponse = formatError(
-      null,
+      error,
       500,
-      "Hay un error con los datos"
+      //"Hay un error con los datos"
     );
+    //res.status(500).send(error);
     res.status(500).send(messageResponse);
   }
 };
