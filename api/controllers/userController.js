@@ -1,4 +1,5 @@
 const { User } = require("../models/");
+const { imageService } = require("../services");
 const { formatError, formatMessage } = require("../helpers");
 
 exports.getUsers = async (req, res) => {
@@ -48,4 +49,20 @@ exports.deleteUser = async (req, res) => {
     const messageResponse = formatError(error, 500, null);
     res.status(500).send(messageResponse);
   }
+};
+
+exports.updateImageProfileUser = async (req, res) => {
+  const { user } = req.user;
+  const { id } = user;
+
+  const myFile = req.file.originalname.split(".");
+  const fileType = myFile[myFile.length - 1];
+  const buffer = req.file.buffer;
+
+  const userExist = await User.findByPk(id);
+
+  if (!userExist) {
+    return res.status(404).json({ msg: "El usuario no existe" });
+  }
+  imageService.updateImageProfile(fileType, buffer, id, res);
 };

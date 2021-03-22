@@ -2,8 +2,6 @@ const jwt = require("jsonwebtoken"); //libreria de JWT
 const { secret } = require("../../config/auth"); //usando la configuracion secret
 
 module.exports = (req, res, next) => {
-  console.log(req.headers);
-
   // Comprobar que existe el token
   if (!req.headers.authorization) {
     res.status(401).json({ msg: "Acceso no autorizado" });

@@ -1,15 +1,16 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser"); //Import bodyParser
 const { sequelize } = require("./api/models");
+
 const { userRoutes, authRoutes, postRoutes } = require("./api/routes"); //Import Routes
+const { transporter } = require("./config/nodeMailerConfig/development");
 
 // Crear el servidor
 const app = express();
 
 //Uso de bodyP
-app.use(bodyParser.urlencoded({ extended: false })); //parse application/x-www-form-urlenconded
-app.use(bodyParser.json()); //parse applicarion/json
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // habilitar cors
 app.use(cors());
@@ -26,6 +27,15 @@ app.use(postRoutes);
 app.listen(port, "0.0.0.0", () => {
   console.log(`El servidor esta funcionando en el puerto ${port}`);
 
+  //Verificamos que este listo para enviar correos.
+  transporter
+    .verify()
+    .then(() => {
+      console.log("Listo para enviar correos");
+    })
+    .catch((error) => {
+      console.log("Hay un problema con el correo del servidor" + error);
+    });
   // Contectandose a la base de datos
   sequelize
     .sync({ force: false }) //Sincroniza el modelo con la base de datos false || true
