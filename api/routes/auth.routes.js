@@ -9,3 +9,4 @@ router.post("/signin", authController.signIn);
 router.post("/verify/:code", authController.verifyUser);
 
 module.exports = router;
+

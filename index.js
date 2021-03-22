@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const { sequelize } = require("./api/models");
-const { userRoutes, authRoutes } = require("./api/routes");
+
+const { userRoutes, authRoutes, postRoutes } = require("./api/routes"); //Import Routes
 const { transporter } = require("./config/nodeMailerConfig/development");
 
 // Crear el servidor
@@ -20,6 +21,7 @@ const port = process.env.PORT || 8080;
 // Importar rutas
 app.use(authRoutes);
 app.use(userRoutes);
+app.use(postRoutes);
 
 //Arrancamos APP
 app.listen(port, "0.0.0.0", () => {
