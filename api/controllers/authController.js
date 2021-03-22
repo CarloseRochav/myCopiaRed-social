@@ -20,7 +20,7 @@ exports.signUp = async (req, res) => {
       role_id: req.body.role ? req.body.role : 4,
       noConfirmation: randomNumber,
     });
-    mailerService.sendEmail(req.body.email, randomNumber);
+    mailerService.sendConfirmEmail(res, req.body.email, randomNumber);
     const messageResponse = formatMessage(
       201,
       "The new user has been created."
@@ -39,12 +39,14 @@ exports.signUp = async (req, res) => {
 exports.signIn = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ where: { email: email } });
+    const user = await User.findOne({
+      where: { email: email, isActivate: true },
+    });
     if (!user) {
       const messageResponse = formatError(
         null,
         404,
-        "User with this email was not found"
+        "User with this email was not found or is not valid"
       );
       throw res.status(404).json(messageResponse);
     }
@@ -77,15 +79,46 @@ exports.signIn = async (req, res) => {
   }
 };
 
-exports.verifyUser = async (req, res) => {
-  const _code = req.params.code;
-  await User.update(
-    { isActivate: true },
-    {
-      where: {
-        noConfirmation: _code,
-      },
+exports.changePassword = async (req, res) => {
+  const { user } = req.user;
+  const { id, email, password } = user;
+  const userExist = await User.findOne({
+    where: { id: id, email: email, password: password },
+  });
+  const newPassword = req.body.password;
+  try {
+    if (!userExist) {
+      throw res.status(404).send("Usuario no existe");
     }
-  );
-  res.status(404).json({ code: 201, msg: "Usuario validado" });
+    if (!bcrypt.compareSync(newPassword, password)) {
+      throw res.status(404).send("La Contrasena no coincide");
+    }
+    const newHashPassword = bcrypt.hashSync(newPassword, +rounds);
+    const newUser = userExist;
+    newUser.password = newHashPassword;
+    await userExist.update(newUser);
+    mailerService.sendChangePassword(res, emailUser, newPassword);
+    res.status(200).send("Contrasena actualizada");
+  } catch (error) {
+    res.status(400).send("Hubo un error al actualizar la Contrasena");
+  }
+};
+
+exports.sendRecoveryPassword = async (req, res) => {
+  const emailUser = req.body.email;
+  const userExist = await User.findOne({
+    where: { email: emailUser },
+  });
+  try {
+    if (!userExist) {
+      throw res.status(404).send("Usuario no existe");
+    }
+    const newUser = userExist;
+    newUser.password = `NERTSDF63248`;
+    await userExist.update(newUser);
+    mailerService.sendChangePassword(res, emailUser, newUser.password);
+    res.status(200).send("Contrasena actualizada");
+  } catch (error) {
+    res.status(400).send("Hubo un error");
+  }
 };
