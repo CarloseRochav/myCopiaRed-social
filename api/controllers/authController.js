@@ -39,12 +39,14 @@ exports.signUp = async (req, res) => {
 exports.signIn = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ where: { email: email } });
+    const user = await User.findOne({
+      where: { email: email, isActivate: true },
+    });
     if (!user) {
       const messageResponse = formatError(
         null,
         404,
-        "User with this email was not found"
+        "User with this email was not found or is not valid"
       );
       throw res.status(404).json(messageResponse);
     }
@@ -77,19 +79,6 @@ exports.signIn = async (req, res) => {
   }
 };
 
-exports.verifyUser = async (req, res) => {
-  const _code = req.params.code;
-  await User.update(
-    { isActivate: true },
-    {
-      where: {
-        noConfirmation: _code,
-      },
-    }
-  );
-  res.status(404).json({ code: 201, msg: "Usuario validado" });
-};
-
 exports.changePassword = async (req, res) => {
   const { user } = req.user;
   const { id, email, password } = user;
@@ -115,7 +104,7 @@ exports.changePassword = async (req, res) => {
   }
 };
 
-exports.recoveryPassword = async (req, res) => {
+exports.sendRecoveryPassword = async (req, res) => {
   const emailUser = req.body.email;
   const userExist = await User.findOne({
     where: { email: emailUser },
