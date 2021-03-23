@@ -12,7 +12,7 @@ router.get("/verify/:code", authController.verifyUser);
 router.get(
   "/account/recovery",
   authMiddleware,
-  authController.recoveryPassword
+  authController.sendRecoveryPassword
 );
 
 router.get(
@@ -22,4 +22,3 @@ router.get(
 );
 
 module.exports = router;
-

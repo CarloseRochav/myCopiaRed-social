@@ -128,3 +128,21 @@ exports.sendRecoveryPassword = async (req, res) => {
     res.status(400).send("Hubo un error");
   }
 };
+
+exports.verifyUser = async (req, res) => {
+  const _code = req.params.code;
+  try {
+    const actualizado = await User.update(
+      { isActivate: true },
+      {
+        where: {
+          noConfirmation: _code,
+        },
+      }
+    );
+    if (actualizado == 0) {
+      throw res.status(404).json({ code: 404, msg: "Usuario no encontrado" });
+    }
+    res.status(201).json({ code: 201, msg: "Usuario validado" });
+  } catch (error) {}
+};
