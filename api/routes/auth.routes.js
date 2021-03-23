@@ -7,15 +7,11 @@ router.post("/signup", authController.signUp);
 
 router.post("/signin", authController.signIn);
 
-router.get("/verify/:code", authController.verifyUser);
+router.post("/verify/:code", authController.verifyUser);
 
-router.get(
-  "/account/recovery",
-  authMiddleware,
-  authController.sendRecoveryPassword
-);
+router.put("/account/recovery", authController.sendRecoveryPassword);
 
-router.get(
+router.post(
   "/account/changePassword",
   authMiddleware,
   authController.changePassword

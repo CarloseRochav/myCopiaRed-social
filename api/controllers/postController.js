@@ -76,14 +76,20 @@ exports.deletePost = async (req, res) => {
 
   try {
     if (!userExist) {
-      throw res.status(404).send("Usuario no existe");
+      throw res
+        .status(404)
+        .json({ code: 404, message: "El usuario no existe" });
     }
     if (!postExist) {
-      throw res.status(404).send("Publicación no existe");
+      throw res
+        .status(404)
+        .json({ code: 404, message: "La publicacion no existe" });
     }
     await Post.destroy({ where: { id: postId, User_id: id } });
-    res.status(200).send("Post has been deleted.");
+    res
+      .status(200)
+      .json({ code: 200, message: "La Publicación ha sido borrada" });
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json({ code: 500, message: error });
   }
 };

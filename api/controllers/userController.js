@@ -62,7 +62,23 @@ exports.updateImageProfileUser = async (req, res) => {
   const userExist = await User.findByPk(id);
 
   if (!userExist) {
-    return res.status(404).json({ msg: "El usuario no existe" });
+    return res.status(404).json({ code: 404, message: "El usuario no existe" });
   }
   imageService.updateImageProfile(fileType, buffer, id, res);
+};
+
+exports.updateImageBackgroundProfileUser = async (req, res) => {
+  const { user } = req.user;
+  const { id } = user;
+
+  const myFile = req.file.originalname.split(".");
+  const fileType = myFile[myFile.length - 1];
+  const buffer = req.file.buffer;
+
+  const userExist = await User.findByPk(id);
+
+  if (!userExist) {
+    return res.status(404).json({ code: 404, message: "El usuario no existe" });
+  }
+  imageService.updateImageBackgroundProfileUser(fileType, buffer, id, res);
 };
