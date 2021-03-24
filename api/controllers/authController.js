@@ -80,8 +80,9 @@ exports.signIn = async (req, res) => {
       res.status(404).json(messageResponse);
     }
   } catch (error) {
-    const messageResponse = formatError(error, 404, "Ha ocurrido un error");
-    res.status(404).json(messageResponse);
+    //const messageResponse = formatError(error, 404, "Ha ocurrido un error");
+    //res.status(404).json(messageResponse);
+    res.status(404).json(error);
   }
 };
 
