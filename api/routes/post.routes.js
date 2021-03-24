@@ -3,7 +3,7 @@ const router = express.Router();
 const { postController } = require("../controllers");
 const { authMiddleware, uploadMiddleware } = require("../middlewares");
 
-router.get("/post", authMiddleware, postController.getPost);
+router.get("/post", postController.getPost);
 
 router.post(
   "/post",
@@ -12,7 +12,13 @@ router.post(
   postController.createPost
 );
 
-router.get("/post/:id", authMiddleware, postController.getPostById);
+router.get("/post/:id", postController.getPostById);
+
+router.get(
+  "/myprofile/post",
+  authMiddleware,
+  postController.getProfilePostById
+);
 
 router.put("/post/:id", authMiddleware, postController.updatePost);
 

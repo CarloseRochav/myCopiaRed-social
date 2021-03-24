@@ -80,5 +80,5 @@ exports.updateImageBackgroundProfileUser = async (req, res) => {
   if (!userExist) {
     return res.status(404).json({ code: 404, message: "El usuario no existe" });
   }
-  imageService.updateImageBackgroundProfileUser(fileType, buffer, id, res);
+  imageService.updateImageBackgroundProfile(fileType, buffer, id, res);
 };

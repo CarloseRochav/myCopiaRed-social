@@ -84,26 +84,39 @@ exports.signIn = async (req, res) => {
 exports.changePassword = async (req, res) => {
   const { user } = req.user;
   const { id, email, password } = user;
-  const userExist = await User.findOne({
-    where: { id: id, email: email, password: password },
-  });
   const newPassword = req.body.password;
   try {
+    const userExist = await User.findOne({
+      where: { id: id, email: email, password: password },
+    });
+
     if (!userExist) {
       throw res
         .status(404)
         .json({ code: 404, message: "El usuario no existe" });
     }
-    if (!bcrypt.compareSync(newPassword, password)) {
+    if (bcrypt.compareSync(password, newPassword)) {
       throw res
         .status(400)
         .json({ code: 400, message: "La Contrasena no coincide" });
     }
     const newHashPassword = bcrypt.hashSync(newPassword, +rounds);
-    const newUser = userExist;
-    newUser.password = newHashPassword;
-    await userExist.update(newUser);
-    mailerService.sendChangePassword(res, emailUser, newPassword);
+    const actualizado = await userExist.update(
+      { password: newHashPassword },
+      {
+        where: {
+          email: email,
+        },
+      }
+    );
+
+    if (actualizado == 0) {
+      throw res
+        .status(404)
+        .json({ code: 404, message: "El usuario no existe" });
+    }
+
+    mailerService.sendChangePassword(res, email, newPassword);
     res.status(200).json({ code: 200, message: "Contrasena actualizada" });
   } catch (error) {
     res.status(400).json({ code: 400, message: error });

@@ -25,7 +25,7 @@ router.post(
 );
 
 router.post(
-  "/usuarios/profilephoto",
+  "/usuarios/profilebackgroundphoto",
   authMiddleware,
   uploadMiddleware,
   userController.updateImageBackgroundProfileUser

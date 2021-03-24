@@ -11,7 +11,7 @@ router.post("/verify/:code", authController.verifyUser);
 
 router.put("/account/recovery", authController.sendRecoveryPassword);
 
-router.post(
+router.put(
   "/account/changePassword",
   authMiddleware,
   authController.changePassword
