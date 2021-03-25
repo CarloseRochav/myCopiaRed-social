@@ -23,7 +23,6 @@ exports.createPost = async (req, res) => {
       title: req.body.title,
       description: req.body.description,
       video: req.body.video,
-      reactions: req.body.reactions,
       User_id: id,
     });
     res.status(201).send("Post creado exitosamente ");
@@ -59,11 +58,10 @@ exports.updatePost = async (req, res) => {
       if(!postExist){
         throw res.status(404).send("Publicación no existe")
       }
-      const post = await Post.findOne({ where: { id: postId, User_id: id } });
-      if(!post){
-        throw res.status(400).send("Usuario incorrecto");
-      }
-      await post.update(newPost);
+      await Post.update({ title: req.body.title,
+        description: req.body.description,
+        video: req.body.video,},  { where: { id: postId, User_id: id } });
+     
       res.status(200).send("Post data has been updated.");
     } catch (error) {
       res.status(500).send("An error has occurred with the server.");

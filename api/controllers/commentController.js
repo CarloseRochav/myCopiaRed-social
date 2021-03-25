@@ -16,20 +16,23 @@ exports.createComments = async (req, res) => {
   const { id } = user;
   const  userExist = await User.findByPk(id);
 
-  const postId = req.body.idPost
-  const postExist =await Post.findByPk(postId);
+  const postId = req.params.idpost;
+  const postExist = await Post.findByPk(postId);
 
   try { 
     if(!userExist){
-      throw res.status(404).send("Usuario no existe");
+      throw res.status(404).send("Usuario no exist");
+      
     }
     if(!postExist){
         throw res.status(404).send("Publicación no existe");
     }
-    await Post.create({
-      commnent: req.body.commnent,
+    await Comments.create({
+      comment: req.body.comment,
       User_id: id,
-      //falta el id del post.
+      Post_id: postId,
+
+      
     });
     res.status(201).send("Comentario creado exitosamente ");
 
@@ -41,7 +44,7 @@ exports.createComments = async (req, res) => {
 exports.getCommentsById = async (req, res) => {
   const commentId = req.params.id;
   try {
-    const comment = await Post.findOne({ where: { id: commentId } });
+    const comment = await Comments.findOne({ where: { id: commentId } });
     res.status(200).send(comment);
   } catch (error) {
     res.status(500).send("An error has occurred with the server.");
@@ -54,12 +57,12 @@ exports.updateComments = async (req, res) => {
   const { id } = user; 
   const userExist = await User.findByPk(id);
 
-  const postId  = req.body.idPost;
+  const postId  = req.params.idpost;
   const postExist = await Post.findByPk(postId);
 
-  const commentId = req.params.id;
+  const commentId = req.params.idcomment;
   const newComment = req.body;
-  const commentExist = await Comment.findByPk(commentId);
+  const commentExist = await Comments.findByPk(commentId);
 
     try {
       if(!userExist){
@@ -71,11 +74,8 @@ exports.updateComments = async (req, res) => {
       if(!commentExist){
         throw res.status(404).send("Comentario no existe")
       }
-      const comment = await Post.findOne({ where: {id: commentId, id: postId, User_id: id } });
-      if( !comment ){
-        throw res.status(400).send("Comentario incorrecto");
-      }
-      await comment.update( newComment );
+     await Comments.update({comment:  newComment.comment}, { where: {id: commentId, Post_id: postId, User_id: id } });
+      
       res.status(200).send("Comment data has been updated.");
     } catch (error) {
       res.status(500).send("An error has occurred with the server.");
@@ -87,11 +87,11 @@ exports.deleteComments = async (req, res) => {
   const { id } = user; 
   const userExist = await User.findByPk(id);
 
-  const postId = req.body.idPost;
-  const postExist = await Post.findByPk(postId);
+  const postId = req.params.idpost;
+  const postExist = await Comments.findByPk(postId);
   
-  const commentId = req.params.id;
-  const commentExist = await Comment.findByPk(commentId);
+  const commentId = req.params.idcomment;
+  const commentExist = await Comments.findByPk(commentId);
   try {
     if(!userExist){
       throw res.status(404).send("Usuario no existe")
@@ -102,7 +102,7 @@ exports.deleteComments = async (req, res) => {
     if(!commentExist){
         throw res.status(404).send("Comentario no existe")
       }
-    await Comment.destroy({ where: {id: commentId,  id: postId, User_id: id } });
+    await Comments.destroy({ where: {id: commentId,  Post_id: postId, User_id: id } });
     res.status(200).send("Comment has been deleted.");
   } catch (error) {
     res.status(500).send(error);

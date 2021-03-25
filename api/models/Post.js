@@ -25,12 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: false,
     },
-    reactions: {
-      //reacciones
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: false,
-    },
+    
     
    },
   {
@@ -44,6 +39,12 @@ Post.associate = function (models) {
       foreignKey: "Post_id",
     });
   };
+
+  Post.associate = function (models) {
+    Post.hasMany(models.Reaccions, {
+        foreignKey: "Post_id",
+      });
+    };
 return Post;
 };
 
