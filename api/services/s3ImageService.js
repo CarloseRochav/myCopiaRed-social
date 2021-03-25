@@ -35,3 +35,5 @@ exports.updateImageProfile = async (fileType, buffer, _id, res) => {
     .status(201)
     .json({ code: 201, msg: "Se ha actualizado la imagen de perfil" });
 };
+
+//Creacion de metodo para cpnsulta de imagenes

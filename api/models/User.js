@@ -96,7 +96,19 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Post, {
         foreignKey: "User_id",
       });
+
     };
+
+  //Segunda asociacion
+  User.associate = function(models){
+    User.hasOne(models.galleryUser,{
+      foreignKey:"user_id",
+    })
+  }
+
+
+
+  
   return User;
   };
 
