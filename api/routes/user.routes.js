@@ -13,9 +13,9 @@ router.put("/usuarios/:id", userController.updateUser);
 router.delete("/usuarios/:id", userController.deleteUser);
 
 //  Perfil
-router.get("/usuario/profile/:id", authMiddleware, (req, res) => {
-  res.status(200).send("User Profile " + req.params.id);
-});
+router.get("/usuario/myprofile", authMiddleware, userController.getUserByJWT);
+
+router.put("/usuario/update", authMiddleware, userController.updateUserByJWT);
 
 router.post(
   "/usuarios/profilephoto",

@@ -82,3 +82,31 @@ exports.updateImageBackgroundProfileUser = async (req, res) => {
   }
   imageService.updateImageBackgroundProfile(fileType, buffer, id, res);
 };
+
+exports.updateUserByJWT = async (req, res) => {
+  const { user } = req.user;
+  const { id } = user;
+  const newUser = req.body;
+  try {
+    const user = await User.findOne({ where: { id: id } });
+    await user.update(newUser);
+    const messageResponse = formatMessage(200, "Usuario actualizado");
+    res.status(200).send(messageResponse);
+  } catch (error) {
+    const messageResponse = formatError(null, 500, "User does not exist");
+    res.status(500).send(messageResponse);
+  }
+};
+
+exports.getUserByJWT = async (req, res) => {
+  const { user } = req.user;
+  const { id } = user;
+  try {
+    const user = await User.findOne({ where: { id: id } });
+    const messageResponse = formatMessage(200, user);
+    res.status(200).send(messageResponse);
+  } catch (error) {
+    const messageResponse = formatError(null, 500, "User does not exist");
+    res.status(500).send(messageResponse);
+  }
+};
