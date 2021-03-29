@@ -1,5 +1,5 @@
 const AWS = require("aws-sdk");
-const { User } = require("../models");
+const { User,Gallery } = require("../models");
 const { v4: uuidv4 } = require("uuid");
 const awsConfig = require("../../config/awsConfig/development");
 
@@ -21,14 +21,20 @@ exports.updateImageProfile = async (fileType, buffer, _id, res) => {
     }
     const { Location } = data;
 
-    await User.update(
+    await User.update(     
       { picture: Location },
       {
         where: {
           id: _id,
         },
-      }
+      }     
     );
+    
+    await Gallery.create(
+      {mediaResource:Location}
+    )
+    
+        
   });
 
   res

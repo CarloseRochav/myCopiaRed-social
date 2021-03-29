@@ -101,13 +101,10 @@ module.exports = (sequelize, DataTypes) => {
 
   //Segunda asociacion
   User.associate = function(models){
-    User.hasOne(models.galleryUser,{
-      foreignKey:"user_id",
+    User.hasOne(models.Gallery,{
+      foreignKey:"User_id",
     })
   }
-
-
-
   
   return User;
   };

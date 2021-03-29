@@ -3,7 +3,7 @@
 //const { DataTypes } = require("sequelize/types")
 
 module.exports=(sequelize,DataTypes)=>{
-    const gallery = sequelize.define(
+    const Gallery = sequelize.define(
         'Gallery',{
             mediaResource:{
                 type: DataTypes.STRING,
@@ -17,6 +17,5 @@ module.exports=(sequelize,DataTypes)=>{
     );
 
 
-    return gallery;
-
+    return Gallery;
 }

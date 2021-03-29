@@ -24,4 +24,6 @@ router.get("/usuario/profile/:id", authMiddleware, (req, res) => {
   res.status(200).send("User Profile " + req.params.id);
 });
 
+//Ruta de prueba con s3
+
 module.exports = router;
