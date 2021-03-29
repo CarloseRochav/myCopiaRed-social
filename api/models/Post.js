@@ -6,28 +6,35 @@ module.exports = (sequelize, DataTypes) => {
     "Post",
     {
       title: {
-        //nombre del titulo del video
         type: DataTypes.STRING,
         allowNull: false,
         unique: false,
       },
 
       description: {
-        //descripcion del video
         type: DataTypes.STRING,
         allowNull: true,
         unique: false,
       },
-
+      thumbnail: {
+        type: DataTypes.STRING,
+      },
       video: {
-        //video
         type: DataTypes.STRING,
       },
       reactions: {
-        //reacciones
         type: DataTypes.STRING,
         allowNull: true,
         unique: false,
+      },
+      video: {
+        type: DataTypes.STRING,
+      },
+      latitude: {
+        type: DataTypes.STRING,
+      },
+      longitude: {
+        type: DataTypes.STRING,
       },
     },
     {

@@ -52,6 +52,9 @@ exports.uploadVideo = async (req, fileType, buffer, res, id) => {
       title: req.body.title,
       description: req.body.description,
       video: Location,
+      thumbnail: Localtion,
+      latitude: req.body.latitude,
+      longitude: req.body.longitude,
       User_id: id,
     });
   });
