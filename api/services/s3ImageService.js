@@ -31,7 +31,10 @@ exports.updateImageProfile = async (fileType, buffer, _id, res) => {
     );
     
     await Gallery.create(
-      {mediaResource:Location}
+      {
+        mediaResource:Location,
+        User_id:_id
+      }
     )
     
         
