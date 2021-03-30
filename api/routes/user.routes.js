@@ -12,6 +12,11 @@ router.put("/usuarios/:id", userController.updateUser);
 
 router.delete("/usuarios/:id", userController.deleteUser);
 
+//  Perfil
+router.get("/usuario/myprofile", authMiddleware, userController.getUserByJWT);
+
+router.put("/usuario/update", authMiddleware, userController.updateUserByJWT);
+
 router.post(
   "/usuarios/profilephoto",
   authMiddleware,
@@ -19,11 +24,14 @@ router.post(
   userController.updateImageProfileUser
 );
 
-//  Perfil
-router.get("/usuario/profile/:id", authMiddleware, (req, res) => {
-  res.status(200).send("User Profile " + req.params.id);
-});
+router.post(
+  "/usuarios/profilebackgroundphoto",
+  authMiddleware,
+  uploadMiddleware,
+  userController.updateImageBackgroundProfileUser
+);
 
+router.post("/getObject",authMiddleware,userController.getAnObject);
 //Ruta de prueba con s3
 
 module.exports = router;

@@ -13,7 +13,7 @@ exports.sendConfirmEmail = async (res, userEmail, randomNumber) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ code: 400, msg: "Hubo un error al enviar el correo" });
+      .json({ code: 400, message: "Hubo un error al enviar el correo" });
   }
 };
 
@@ -29,7 +29,7 @@ exports.sendChangePassword = async (res, userEmail, newPassword) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ code: 400, msg: "Hubo un error al enviar el correo" });
+      .json({ code: 400, message: "Hubo un error al enviar el correo" });
   }
 };
 
@@ -45,6 +45,6 @@ exports.sendRecoveryPassword = async (res, userEmail, newPassword) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ code: 400, msg: "Hubo un error al enviar el correo" });
+      .json({ code: 400, message: "Hubo un error al enviar el correo" });
   }
 };

@@ -5,17 +5,21 @@
 module.exports=(sequelize,DataTypes)=>{
     const Gallery = sequelize.define(
         'Gallery',{
-            mediaResource:{
+            pathResource:{
                 type: DataTypes.STRING,
                 allowNull: false,
                 unique:false,
+            },
+            keyResource:{
+                type:DataTypes.STRING,
+                allowNull: false,
+                unique:true,
             }
         },
         {
             tableName:"Gallery"
         }
-    );
-
+            );
 
     return Gallery;
 }
