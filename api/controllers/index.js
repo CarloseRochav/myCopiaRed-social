@@ -4,4 +4,6 @@ module.exports = {
   postController: require("./postController"),
   commentController: require("./commentController"),
   reaccionsController: require("./reaccionsController"),
+  categoryController: require("./categoryController"),
+  interfaceController: require("./interfaceController"),
 };

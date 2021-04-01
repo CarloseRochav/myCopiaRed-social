@@ -4,4 +4,6 @@ module.exports = {
   postRoutes: require("./post.routes"),
   commentRoutes: require("./comment.router"),
   reaccionRoutes: require("./reaccion.routes"),
+  interfacesRoutes: require("./interface.routes"),
+  categoryRoutes: require("./category.routes"),
 };

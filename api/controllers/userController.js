@@ -62,13 +62,12 @@ exports.updateImageProfileUser = async (req, res) => {
   const userExist = await User.findByPk(id);
 
   if (!userExist) {
-    return res.status(404).json({ msg: "El usuario no existe" });
+    return res.status(404).json({ code: 404, message: "El usuario no existe" });
   }
   imageService.updateImageProfile(fileType, buffer, id, res);
 };
 
-// metodo para bloquear a un user
-// pór mientras voy a usar el async = blacklist
+
 exports.Blacklist = async (req, res) => {
   const { user } = req.user;
   const { id: blockerId } = user;
@@ -107,5 +106,48 @@ exports.Blacklist = async (req, res) => {
       .json({ code: 200, msg: "El Usuario ha sido bloqueado" });
   } catch (error) {
     return res.status(error.code).json({ code: error.code, msg: error.msg });
+
+exports.updateImageBackgroundProfileUser = async (req, res) => {
+  const { user } = req.user;
+  const { id } = user;
+
+  const myFile = req.file.originalname.split(".");
+  const fileType = myFile[myFile.length - 1];
+  const buffer = req.file.buffer;
+
+  const userExist = await User.findByPk(id);
+
+  if (!userExist) {
+    return res.status(404).json({ code: 404, message: "El usuario no existe" });
+  }
+  imageService.updateImageBackgroundProfile(fileType, buffer, id, res);
+};
+
+exports.updateUserByJWT = async (req, res) => {
+  const { user } = req.user;
+  const { id } = user;
+  const newUser = req.body;
+  try {
+    const user = await User.findOne({ where: { id: id } });
+    await user.update(newUser);
+    const messageResponse = formatMessage(200, "Usuario actualizado");
+    res.status(200).send(messageResponse);
+  } catch (error) {
+    const messageResponse = formatError(null, 500, "User does not exist");
+    res.status(500).send(messageResponse);
+  }
+};
+
+exports.getUserByJWT = async (req, res) => {
+  const { user } = req.user;
+  const { id } = user;
+  try {
+    const user = await User.findOne({ where: { id: id } });
+    const messageResponse = formatMessage(200, user);
+    res.status(200).send(messageResponse);
+  } catch (error) {
+    const messageResponse = formatError(null, 500, "User does not exist");
+    res.status(500).send(messageResponse);
+
   }
 };
