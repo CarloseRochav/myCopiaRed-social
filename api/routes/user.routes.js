@@ -31,9 +31,12 @@ router.post(
   userController.updateImageBackgroundProfileUser
 );
 
-router.post("/getobject",authMiddleware,userController.getAnObject);
+//Rutas de GALERIA
+router.post("/getobject",authMiddleware,userController.getAnObject);//Obetener un objeto 
 //Ruta de prueba con s3
-router.get("/getAll",userController.getAllObjects);
-//Ruta de prueba con s3
+router.get("/getAll",authMiddleware,userController.getAllObjects);//Obtener todos los objetos
+//Eliminar un objeto
+router.post("/deleteObject",userController.deleteObject);
+
 
 module.exports = router;

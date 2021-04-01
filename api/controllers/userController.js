@@ -111,6 +111,8 @@ exports.getUserByJWT = async (req, res) => {
   }
 };
 
+//CRUD S3 GALLERY
+
 exports.getAnObject=async (req,res)=>{
     const{user}=req.user;
     const {id}=user;
@@ -130,15 +132,28 @@ exports.getAnObject=async (req,res)=>{
     imageService.getObject(key);
 }
 
-exports.getAllObjects=async (req,res)=>{
-    // const{user}=req.user;
-    // const {id}=user;
+exports.getAllObjects=async (req,res)=>{//Obetener todos los objetos
+    const{user}=req.user;
+    const {id}=user;
 
-    // const key = req.body.key;
+    //const key = req.body.key;
 
-    // const userExist=await User.findByPk(id);
-    // if (!userExist)
-    //   throw res.status(404).json({ code: 404, message: "El usuario no existe" });
+    const userExist=await User.findByPk(id);
+    if (!userExist)
+      throw res.status(404).json({ code: 404, message: "El usuario no existe" });
     
-      imageService.getAllObjects();
+  imageService.getAllObjects();
+}
+
+
+exports.deleteObject=async (req,res)=>{
+    let key = req.body.key;
+
+
+    
+    console.log(key);
+
+
+
+  imageService.deleteImageOrVideo(key)
 }

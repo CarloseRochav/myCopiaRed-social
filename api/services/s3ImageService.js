@@ -122,11 +122,15 @@ exports.getObject=async(key)=>{
   }
 
   s3.getObject(params,(err,data)=>{
+    
       if(err){
-        console.log("Hay un error : "+err);
-        
+        console.log("Hay un error : "+err);       
     }
     else{
+      fs.writeFile("Imagen_desde_s3.mp4",data.Body,'binary',(err)=>{
+        if(err) throw err
+        console.log("imagen descargada");
+      })
       console.log(data);
     }
   });
@@ -141,7 +145,7 @@ exports.getAllObjects=async()=>{
 
   s3.listObjectsV2(params,(err,data)=>{
     if(err){
-      console.log("Tenemos error ");
+      console.log("Tenemos un  error ");
       throw err
     }
     else{
@@ -151,6 +155,21 @@ exports.getAllObjects=async()=>{
 }
 
 //Eliminar un objeto
-// exports.deleteImageOrVideo= async()=>{
+exports.deleteImageOrVideo= async(key)=>{
+  const params={
+    Bucket:awsConfig.bucket,
+    Key:key
+  }
 
-// }
+  s3.deleteObject(params,(err,data)=>{
+
+    if(err){
+      console.log(" Error al procesar : ");
+      throw err;
+    }
+    else{
+      console.log(`El ${data} se ha eliminado satisfacctoriamente`);
+    }
+  })
+  
+}
