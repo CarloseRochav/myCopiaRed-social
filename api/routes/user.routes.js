@@ -24,6 +24,6 @@ router.get("/usuario/profile/:id", authMiddleware, (req, res) => {
   res.status(200).send("User Profile " + req.params.id);
 });
 
-router.post("/blacklist/:idBlocked", authMiddleware, userController.Blacklist);
+router.put("/blacklist/:id", authMiddleware, userController.Blacklist);
 
 module.exports = router;

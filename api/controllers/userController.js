@@ -1,6 +1,6 @@
-const { User, Blacklist, sequelize } = require("../models/");
+const { User, Blacklist, sequelize } = require("../models");
 const { imageService } = require("../services");
-const { formatError, formatMessage } = require("../helpers");
+const { formatError, formatMessage, validationError } = require("../helpers");
 
 exports.getUsers = async (req, res) => {
   try {
@@ -71,48 +71,41 @@ exports.updateImageProfileUser = async (req, res) => {
 // pór mientras voy a usar el async = blacklist
 exports.Blacklist = async (req, res) => {
   const { user } = req.user;
-  const { id } = user;
-  const  idUserBloked  = req.params.idBlocked;
-  try{
-    
-    const Userfind = await User.findByPk(idUserBloked);
-    console.log(Userfind);
+  const { id: blockerId } = user;
+  const blockedId = req.params.id;
+  try {
+    if (blockerId === parseInt(blockedId)) {
+      throw validationError(500, "No te puedes bloquear a ti mismo");
+    }
+    const blockerUserExist = await User.findByPk(blockerId);
+    const blockedUserExist = await User.findByPk(blockedId);
+    if (!blockerUserExist) {
+      throw validationError(404, "Tu usuario no existe");
+    }
+    if (!blockedUserExist) {
+      throw validationError(404, "El Usuario a bloquear no existe");
+    }
 
-  if(!Userfind) {
-    throw res.status(400).send("El usuario que deseas bloquear no existe.");
-  };
+    const userBlock = await Blacklist.findOne({
+      where: {
+        User_id: blockerId,
+        UserBlocked_id: parseInt(blockedId),
+      },
+    });
 
-  if( id === parseInt(idUserBloked)){
-    throw res.status(400).send("No puedes bloquearte a ti mismo.");
+    if (userBlock) {
+      throw validationError(505, "El Usuario ya esta bloqueado");
+    }
+
+    await Blacklist.create({
+      User_id: blockerId,
+      UserBlocked_id: parseInt(blockedId),
+    });
+
+    return res
+      .status(200)
+      .json({ code: 200, msg: "El Usuario ha sido bloqueado" });
+  } catch (error) {
+    return res.status(error.code).json({ code: error.code, msg: error.msg });
   }
-  console.log("L87");
-  /*
-  const userBlock = await Blacklist.findOne({
-    where :{
-    // User_id: req.user.id,
-     UserBlocked_id: idBlocked
-    },
-  });
-
-  console.log("userBlock", userBlock);
-
- 
-  console.log(userBlock);
-*/
-await Blacklist.create({
-  User_id: id,
-  UserBlocked_id: idUserBloked,
-});
-
-if(idUserBloked){
-  throw res.status(400).send("Este usuario ya esta bloqueado.");
-}
-
-res.status(200).send("El usuario ha sido Bloqueado.");
-console.log("entra L111");
-
- }catch (error) {
-   console.log("error", error);
-  res.status(500).send(error);  
-} 
 };

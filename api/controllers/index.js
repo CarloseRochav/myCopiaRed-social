@@ -1,7 +1,7 @@
 module.exports = {
-  userController: require("./userController"),
+  userController: require("./userController.js"),
   authController: require("./authController"),
   postController: require("./postController"),
   commentController: require("./commentController"),
-  reaccionsController:  require("./reaccionsController"),
+  reaccionsController: require("./reaccionsController"),
 };
