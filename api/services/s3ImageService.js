@@ -115,16 +115,39 @@ exports.updateImageBackgroundProfile = async (fileType, buffer, _id, res) => {
 };
 
 //Obetener listas de objetos
-exports.getObject=async(path)=>{
+exports.getObject=async(key)=>{
   const params={
     Bucket:awsConfig.bucket,
-    Key:path
+    Key:key
   }
 
   s3.getObject(params,(err,data)=>{
-      if(err)throw err;
+      if(err){
+        console.log("Hay un error : "+err);
+        
+    }
+    else{
       console.log(data);
+    }
   });
+}
+
+//Obetener todos los objetos del bucket
+exports.getAllObjects=async()=>{
+
+  let params ={
+    Bucket:awsConfig.bucket
+  }
+
+  s3.listObjectsV2(params,(err,data)=>{
+    if(err){
+      console.log("Tenemos error ");
+      throw err
+    }
+    else{
+      console.log(data);
+    }
+  })
 }
 
 //Eliminar un objeto

@@ -114,12 +114,31 @@ exports.getUserByJWT = async (req, res) => {
 exports.getAnObject=async (req,res)=>{
     const{user}=req.user;
     const {id}=user;
-
-    const key = req.body.key;
+    //1ra
+    let key = req.body.key;
+    console.log(`Tipo de dato : ${Object.keys(req.body)}`);
+    
+    //2da
+    //const key = 'e50ab185-0ac5-4d01-bff0-c657162afb88.jfif';
+    // FUNCIONA BIEN
+  
 
     const userExist=await User.findByPk(id);
     if (!userExist)
       throw res.status(404).json({ code: 404, message: "El usuario no existe" });
     
     imageService.getObject(key);
+}
+
+exports.getAllObjects=async (req,res)=>{
+    // const{user}=req.user;
+    // const {id}=user;
+
+    // const key = req.body.key;
+
+    // const userExist=await User.findByPk(id);
+    // if (!userExist)
+    //   throw res.status(404).json({ code: 404, message: "El usuario no existe" });
+    
+      imageService.getAllObjects();
 }

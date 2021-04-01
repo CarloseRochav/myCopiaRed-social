@@ -31,7 +31,9 @@ router.post(
   userController.updateImageBackgroundProfileUser
 );
 
-router.post("/getObject",authMiddleware,userController.getAnObject);
+router.post("/getobject",authMiddleware,userController.getAnObject);
+//Ruta de prueba con s3
+router.get("/getAll",userController.getAllObjects);
 //Ruta de prueba con s3
 
 module.exports = router;
