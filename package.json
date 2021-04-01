@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/hackademymx/red-social-back#readme",
   "dependencies": {
+    "@types/sequelize": "^4.28.9",
     "aws-sdk": "^2.862.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",

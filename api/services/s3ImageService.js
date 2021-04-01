@@ -127,11 +127,11 @@ exports.getObject=async(key)=>{
         console.log("Hay un error : "+err);       
     }
     else{
-      fs.writeFile("Imagen_desde_s3.mp4",data.Body,'binary',(err)=>{
-        if(err) throw err
-        console.log("imagen descargada");
-      })
-      console.log(data);
+      // fs.writeFile("Imagen_desde_s3.mp4",data.Body,'binary',(err)=>{
+      //   if(err) throw err
+      //   console.log("imagen descargada");
+      // })
+      console.log(data.Body);
     }
   });
 }

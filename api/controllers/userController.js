@@ -1,6 +1,7 @@
-const { User } = require("../models/");
+const { User,Gallery } = require("../models/");
 const { imageService } = require("../services");
 const { formatError, formatMessage } = require("../helpers");
+
 
 exports.getUsers = async (req, res) => {
   try {
@@ -118,42 +119,86 @@ exports.getAnObject=async (req,res)=>{
     const {id}=user;
     //1ra
     let key = req.body.key;
-    console.log(`Tipo de dato : ${Object.keys(req.body)}`);
-    
-    //2da
-    //const key = 'e50ab185-0ac5-4d01-bff0-c657162afb88.jfif';
-    // FUNCIONA BIEN
-  
+    console.log(`Tipo de dato : ${Object.keys(req.body)}`); 
 
     const userExist=await User.findByPk(id);
     if (!userExist)
       throw res.status(404).json({ code: 404, message: "El usuario no existe" });
+
     
-    imageService.getObject(key);
+    // try{
+    //   const object = await Gallery.findOne({where:{keyResource:key}});
+
+    //   if(!object) throw res.status(404).json({code:404, message:"Archivo no existe"});
+    //   res.status(200).json({Ruta:object.pathResource,
+    //                         Nombre:object.keyResource,
+    //                         ByUser:object.User_id});
+
+                             imageService.getObject(key);
+
+    // }
+    // catch(err){
+    //   const message = formatError(err,404,"Error al ingresar datos");
+    //   res.status(404).json(message);
+    // }
+
+  
+
+    
+   
 }
 
 exports.getAllObjects=async (req,res)=>{//Obetener todos los objetos
     const{user}=req.user;
     const {id}=user;
+    
 
     //const key = req.body.key;
 
     const userExist=await User.findByPk(id);
     if (!userExist)
-      throw res.status(404).json({ code: 404, message: "El usuario no existe" });
-    
-  imageService.getAllObjects();
+      throw res.status(404).json({ code: 404, message: "El usuario no existe" });    
+
+      const objects = await Gallery.findAll();
+
+         if(!objects) throw res.status(404).json({code:404, message:"Archivo no existe"});        
+         res.status(200).json(objects);
+
+        imageService.getAllObjects();
 }
 
 
 exports.deleteObject=async (req,res)=>{
     let key = req.body.key;
+    const{user}=req.user;
+    const {id}=user;
+    const userExist=await User.findByPk(id);
+    
+    if (!userExist)
+      throw res.status(404).json({ code: 404, message: "El usuario no existe" });
+    
+      
+    try{
+      //Eliminar registro de la base de datos que cumpla con las siguientes condiciones
+      await Gallery.destroy(
+        {where: {User_id:id,keyResource:key}}         
+      )
 
+      imageService.deleteImageOrVideo(key);
+      
+      //imageService.deleteImageOrVideo(key)
+      res.status(200).json({message: "Eliminacion de objeto"});
+    }
+    catch (err){
+      const message=formatError(err,400,"Error No coincide con la condicion");
+      console.log(message);
+      
+    }
+    
 
     
-    console.log(key);
 
 
 
-  imageService.deleteImageOrVideo(key)
+  
 }

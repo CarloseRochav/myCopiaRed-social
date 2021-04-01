@@ -36,7 +36,7 @@ router.post("/getobject",authMiddleware,userController.getAnObject);//Obetener u
 //Ruta de prueba con s3
 router.get("/getAll",authMiddleware,userController.getAllObjects);//Obtener todos los objetos
 //Eliminar un objeto
-router.post("/deleteObject",userController.deleteObject);
+router.post("/deleteObject",authMiddleware,userController.deleteObject);
 
 
 module.exports = router;
