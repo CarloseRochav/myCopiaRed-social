@@ -25,7 +25,6 @@ exports.createPost = async (req, res) => {
         .json({ code: 404, message: "El usuario no existe" });
     }
     await imageService.uploadVideo(req, fileType, buffer, res, id);
-
     res.status(200).json({ code: 200, message: "Post creado exitosamente" });
   } catch (error) {
     res.status(500).json({ code: 500, message: error });

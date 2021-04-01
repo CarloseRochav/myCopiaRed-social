@@ -43,4 +43,5 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   return Post;
+
 };

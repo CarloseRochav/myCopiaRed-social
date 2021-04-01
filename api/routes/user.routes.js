@@ -31,4 +31,6 @@ router.post(
   userController.updateImageBackgroundProfileUser
 );
 
+router.post("/blacklist/:id", authMiddleware, userController.Blacklist);
+
 module.exports = router;

@@ -1,6 +1,6 @@
-const { User } = require("../models/");
+const { User, Blacklist, sequelize } = require("../models");
 const { imageService } = require("../services");
-const { formatError, formatMessage } = require("../helpers");
+const { formatError, formatMessage, validationError } = require("../helpers");
 
 exports.getUsers = async (req, res) => {
   try {
@@ -67,6 +67,46 @@ exports.updateImageProfileUser = async (req, res) => {
   imageService.updateImageProfile(fileType, buffer, id, res);
 };
 
+
+exports.Blacklist = async (req, res) => {
+  const { user } = req.user;
+  const { id: blockerId } = user;
+  const blockedId = req.params.id;
+  try {
+    if (blockerId === parseInt(blockedId)) {
+      throw validationError(500, "No te puedes bloquear a ti mismo");
+    }
+    const blockerUserExist = await User.findByPk(blockerId);
+    const blockedUserExist = await User.findByPk(blockedId);
+    if (!blockerUserExist) {
+      throw validationError(404, "Tu usuario no existe");
+    }
+    if (!blockedUserExist) {
+      throw validationError(404, "El Usuario a bloquear no existe");
+    }
+
+    const userBlock = await Blacklist.findOne({
+      where: {
+        User_id: blockerId,
+        UserBlocked_id: parseInt(blockedId),
+      },
+    });
+
+    if (userBlock) {
+      throw validationError(505, "El Usuario ya esta bloqueado");
+    }
+
+    await Blacklist.create({
+      User_id: blockerId,
+      UserBlocked_id: parseInt(blockedId),
+    });
+
+    return res
+      .status(200)
+      .json({ code: 200, msg: "El Usuario ha sido bloqueado" });
+  } catch (error) {
+    return res.status(error.code).json({ code: error.code, msg: error.msg });
+
 exports.updateImageBackgroundProfileUser = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
@@ -108,5 +148,6 @@ exports.getUserByJWT = async (req, res) => {
   } catch (error) {
     const messageResponse = formatError(null, 500, "User does not exist");
     res.status(500).send(messageResponse);
+
   }
 };

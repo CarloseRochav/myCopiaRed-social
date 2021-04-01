@@ -27,3 +27,10 @@ exports.random = () => {
   }
   return x;
 };
+
+exports.validationError = (code, message) => {
+  const result = {};
+  result.code = code;
+  result.msg = message;
+  return result;
+};

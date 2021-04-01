@@ -115,8 +115,27 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function (models) {
     User.hasMany(models.Post, {
-      foreignKey: "User_id",
-    });
-  };
+        foreignKey: "User_id",
+      });
+    };
+
+    User.associate = function (models) {
+      User.hasMany(models.Comments, {
+          foreignKey: "User_id",
+        });
+      };
+
+      User.associate = function (models) {
+        User.hasMany(models.Reaccions, {
+            foreignKey: "User_id",
+          });
+        };
+
+        User.associate = function (models) {
+          User.hasMany(models.Blacklist, {
+            foreignKey: "User_id",
+          });
+        };
+        
   return User;
 };
