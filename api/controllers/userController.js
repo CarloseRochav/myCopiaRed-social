@@ -126,21 +126,21 @@ exports.getAnObject=async (req,res)=>{
       throw res.status(404).json({ code: 404, message: "El usuario no existe" });
 
     
-    // try{
-    //   const object = await Gallery.findOne({where:{keyResource:key}});
+    try{
+      const object = await Gallery.findOne({where:{keyResource:key}});
 
-    //   if(!object) throw res.status(404).json({code:404, message:"Archivo no existe"});
-    //   res.status(200).json({Ruta:object.pathResource,
-    //                         Nombre:object.keyResource,
-    //                         ByUser:object.User_id});
+      if(!object) throw res.status(404).json({code:404, message:"Archivo no existe"});
+      res.status(200).json({Ruta:object.pathResource,
+                            Nombre:object.keyResource,
+                            ByUser:object.User_id});
 
                              imageService.getObject(key);
 
-    // }
-    // catch(err){
-    //   const message = formatError(err,404,"Error al ingresar datos");
-    //   res.status(404).json(message);
-    // }
+    }
+    catch(err){
+      const message = formatError(err,404,"Error al ingresar datos");
+      res.status(404).json(message);
+    }
 
   
 
