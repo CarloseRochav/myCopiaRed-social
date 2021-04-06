@@ -7,9 +7,7 @@ exports.getCategories = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -26,9 +24,7 @@ exports.createCategories = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -47,8 +43,6 @@ exports.deleteCategory = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };

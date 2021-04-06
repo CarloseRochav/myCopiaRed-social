@@ -37,9 +37,7 @@ exports.createInterface = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -70,6 +68,8 @@ exports.updateInterface = async (req, res) => {
       .status(200)
       .json({ code: 200, message: "La configuracion ha sido actualizada" });
   } catch (error) {
-    res.status(500).json({ code: 500, message: error });
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };

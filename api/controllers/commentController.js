@@ -7,9 +7,7 @@ exports.getComments = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -29,9 +27,7 @@ exports.createComments = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -43,9 +39,7 @@ exports.getCommentsById = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -69,9 +63,7 @@ exports.updateComments = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 exports.deleteComments = async (req, res) => {
@@ -89,8 +81,6 @@ exports.deleteComments = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };

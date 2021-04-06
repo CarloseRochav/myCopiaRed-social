@@ -7,9 +7,7 @@ exports.getPost = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -21,9 +19,7 @@ exports.getPostById = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -43,9 +39,7 @@ exports.updatePost = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -63,9 +57,7 @@ exports.deletePost = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -75,18 +67,17 @@ exports.createPost = async (req, res) => {
   const myFile = req.file.originalname.split(".");
   const fileType = myFile[myFile.length - 1];
   const buffer = req.file.buffer;
+  const body = req.body;
   try {
     await userService.userExist(id);
-    await s3Service.uploadVideo(fileType, buffer, id);
+    await s3Service.uploadVideo(body, fileType, buffer, id);
     return res
       .status(200)
       .json({ code: 200, msg: "La publicacion ha sido creada exitosamente" });
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -99,9 +90,7 @@ exports.getProfilePostById = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -115,8 +104,6 @@ exports.getProfilePostByJWT = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };

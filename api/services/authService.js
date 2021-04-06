@@ -22,7 +22,8 @@ exports.verifyPasswordLength = (_password) => {
   return password;
 };
 
-exports.createToken = (externalPassword, userDB) => {
+exports.createToken = (externalPassword, _userDB) => {
+  const userDB = _userDB;
   const id = userDB.id;
   const userPassword = userDB.password;
 
@@ -31,7 +32,14 @@ exports.createToken = (externalPassword, userDB) => {
   }
 
   const token = jwt.sign(
-    { user: { id, password: userPassword, email, role: userDB.role_id } },
+    {
+      user: {
+        id: id,
+        password: userDB.password,
+        email: userDB.email,
+        role: userDB.role_id,
+      },
+    },
     secret,
     {
       expiresIn: expires,

@@ -8,9 +8,7 @@ exports.getUsers = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -22,9 +20,7 @@ exports.getUserById = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -37,9 +33,7 @@ exports.getUserByJWT = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -55,9 +49,7 @@ exports.updateUserByJWT = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -72,9 +64,7 @@ exports.deleteUser = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 //#endregion
@@ -94,9 +84,7 @@ exports.updateImageProfileUser = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -115,9 +103,7 @@ exports.updateImageBackgroundProfileUser = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 //#endregion
@@ -140,9 +126,7 @@ exports.Blacklist = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 //#endregion

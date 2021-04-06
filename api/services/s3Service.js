@@ -57,7 +57,7 @@ exports.updateImageBackgroundProfile = async (fileType, buffer, _id) => {
   });
 };
 
-exports.uploadVideo = async (fileType, buffer, id) => {
+exports.uploadVideo = async (body, fileType, buffer, id) => {
   const params = {
     Bucket: awsConfig.bucket,
     Key: `${uuidv4()}.${fileType}`,
@@ -70,12 +70,12 @@ exports.uploadVideo = async (fileType, buffer, id) => {
     }
     const { Location } = data;
     await Post.create({
-      title: req.body.title,
-      description: req.body.description,
+      title: body.title,
+      description: body.description,
       video: Location,
       thumbnail: Location,
-      latitude: req.body.latitude ? req.body.latitude : "11111",
-      longitude: req.body.latitude ? req.body.latitude : "6666",
+      latitude: body.latitude ? body.latitude : "11111",
+      longitude: body.latitude ? body.latitude : "6666",
       User_id: id,
     });
   });

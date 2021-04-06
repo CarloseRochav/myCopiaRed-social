@@ -8,31 +8,27 @@ exports.signUp = async (req, res) => {
   try {
     authService.verifyPasswordLength(password);
     await userService.createUser(req.body, hashPassword, randomNumber);
-    await mailerService.sendConfirmEmail(body.email, randomNumber);
+    await mailerService.sendConfirmEmail(req.body.email, randomNumber);
     return res
       .status(200)
       .json({ code: 200, msg: "Usuario creado con exito." });
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
 exports.signIn = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = userService.userIsValid(email);
+    const user = await userService.userIsValid(email);
     const token = authService.createToken(password, user);
     return res.status(200).json({ code: 200, msg: token });
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -54,9 +50,7 @@ exports.changePassword = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -76,9 +70,7 @@ exports.sendRecoveryPassword = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -93,8 +85,6 @@ exports.verifyUser = async (req, res) => {
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
-      .json(
-        error.message ? { code: 500, msg: error.errors[0].message } : error
-      );
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };

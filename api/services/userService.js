@@ -61,8 +61,9 @@ exports.userExistWithEmailPassword = async (_email, _password) => {
 };
 
 exports.userExistWithEmail = async (_email) => {
+  const userEmail = _email;
   const user = await User.findOne({
-    where: { email: _email },
+    where: { email: userEmail },
   });
   if (!user) {
     throw customError(404, "El usuario no existe.");
@@ -70,9 +71,9 @@ exports.userExistWithEmail = async (_email) => {
   return user;
 };
 
-exports.userIsValid = async (email) => {
+exports.userIsValid = async (_email) => {
   const user = await User.findOne({
-    where: { email: email, isActivate: true },
+    where: { email: _email, isActivate: true },
   });
   if (!user) {
     throw customError(404, "El usuario no existe o no es valido.");
@@ -81,7 +82,7 @@ exports.userIsValid = async (email) => {
 };
 
 exports.updateUserPassword = async (_password, _email) => {
-  await userExist.update(
+  await User.update(
     { password: _password },
     {
       where: {
