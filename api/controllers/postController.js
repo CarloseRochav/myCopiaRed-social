@@ -1,8 +1,9 @@
 const { s3Service, postService, userService } = require("../services");
 
 exports.getPost = async (req, res) => {
+  const { page, size } = req.query;
   try {
-    const posts = await postService.getPosts();
+    const posts = await postService.getPosts(page, size);
     return res.status(200).json({ code: 200, msg: posts });
   } catch (error) {
     return res

@@ -1,11 +1,18 @@
 const { Post } = require("../models");
-const { customError } = require("../helpers");
+const { customError, getPagination, getPagingData } = require("../helpers");
 
-exports.getPosts = async () => {
-  const posts = await Post.findAll();
+exports.getPosts = async (page, size) => {
+  const { limit, offset } = getPagination(page, size);
+
+  const posts = await Post.findAndCountAll({
+    limit: limit,
+    offset: offset,
+    where: {},
+  });
   if (!posts || !posts.length) {
     throw customError(404, "No hay publicaciones en la base de datos");
   }
+  // const responsePost = getPagingData(posts, page, limit);
   return posts;
 };
 
