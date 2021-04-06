@@ -7,4 +7,5 @@ module.exports = {
   authService: require("./authService"),
   categoryService: require("./categoryService"),
   commentService: require("./commentService"),
+  reaccionService: require("./reaccionService"),
 };

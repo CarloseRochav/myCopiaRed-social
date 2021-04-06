@@ -20,7 +20,7 @@ exports.createInterface = async (req, res) => {
   try {
     const userExist = await User.findByPk(id);
     if (!userExist) {
-      throw res
+      return res
         .status(404)
         .json({ code: 404, message: "El usuario no existe" });
     }
@@ -48,7 +48,7 @@ exports.updateInterface = async (req, res) => {
   try {
     const userExist = await User.findByPk(id);
     if (!userExist) {
-      throw res
+      return res
         .status(404)
         .json({ code: 404, message: "El usuario no existe" });
     }
