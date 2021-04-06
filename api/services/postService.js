@@ -7,13 +7,10 @@ exports.getPosts = async (page, size) => {
   const posts = await Post.findAndCountAll({
     limit: limit,
     offset: offset,
-    where: {},
   });
-  if (!posts || !posts.length) {
-    throw customError(404, "No hay publicaciones en la base de datos");
-  }
-  // const responsePost = getPagingData(posts, page, limit);
-  return posts;
+
+  const responsePost = getPagingData(posts, page, limit);
+  return responsePost;
 };
 
 exports.getPostById = async (postId) => {
@@ -21,12 +18,17 @@ exports.getPostById = async (postId) => {
   return post;
 };
 
-exports.getAllUserPostsById = async (userId) => {
-  const posts = await Post.findAll({ where: { User_id: userId } });
-  if (!posts || !posts.length) {
-    throw customError(404, "Este usuario no tiene publicaciones");
-  }
-  return posts;
+exports.getAllUserPostsById = async (userId, page, size) => {
+  const { limit, offset } = getPagination(page, size);
+
+  const posts = await Post.findAndCountAll({
+    limit: limit,
+    offset: offset,
+    where: { User_id: userId },
+  });
+
+  const responsePost = getPagingData(posts, page, limit);
+  return responsePost;
 };
 
 exports.updatePost = async (_idUser, _idPost, body) => {

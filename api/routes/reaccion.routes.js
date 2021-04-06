@@ -6,7 +6,7 @@ const { authMiddleware } = require("../middlewares");
 router.get("/reaccion", authMiddleware, reaccionsController.getReaccions);
 
 router.post(
-  "/reaccions/idpost",
+  "/reaccions/:idpost",
   authMiddleware,
   reaccionsController.createReaccions
 );

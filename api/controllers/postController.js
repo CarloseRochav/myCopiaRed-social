@@ -98,9 +98,11 @@ exports.getProfilePostById = async (req, res) => {
 exports.getProfilePostByJWT = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
+  console.log(id);
+  const { page, size } = req.query;
   try {
     await userService.userExist(id);
-    const posts = await postService.getAllUserPostsById(id);
+    const posts = await postService.getAllUserPostsById(id, page, size);
     return res.status(200).json({ code: 200, msg: posts });
   } catch (error) {
     return res
