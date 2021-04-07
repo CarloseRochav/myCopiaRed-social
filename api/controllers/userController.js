@@ -1,56 +1,74 @@
-const { User, Blacklist, sequelize } = require("../models");
-const { imageService } = require("../services");
-const { formatError, formatMessage, validationError } = require("../helpers");
+const { s3Service, userService, blacklistService } = require("../services");
 
+//#region Basic User Methods
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
-    const messageResponse = formatMessage(200, users);
-    res.status(200).send(messageResponse);
+    const users = await userService.getUsers();
+    return res.status(200).json({ code: 200, msg: users });
   } catch (error) {
-    const messageResponse = formatError(error, 500, null);
-    res.status(500).send(messageResponse);
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
 exports.getUserById = async (req, res) => {
   const userId = req.params.id;
   try {
-    const user = await User.findOne({ where: { id: userId } });
-    const messageResponse = formatMessage(200, user);
-    res.status(200).send(messageResponse);
+    const user = await userService.getUserById(userId);
+    return res.status(200).json({ code: 200, msg: user });
   } catch (error) {
-    const messageResponse = formatError(error, 500, null);
-    res.status(500).send(messageResponse);
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
-exports.updateUser = async (req, res) => {
-  const userId = req.params.id;
-  const newUser = req.body;
+exports.getUserByJWT = async (req, res) => {
+  const { user } = req.user;
+  const { id } = user;
   try {
-    const user = await User.findOne({ where: { id: userId } });
-    await user.update(newUser);
-    const messageResponse = formatMessage(200, user);
-    res.status(200).send(messageResponse);
+    const user = await userService.getUserById(id);
+    return res.status(200).json({ code: 200, msg: user });
   } catch (error) {
-    const messageResponse = formatError(null, 500, "User does not exist");
-    res.status(500).send(messageResponse);
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
+  }
+};
+
+exports.updateUserByJWT = async (req, res) => {
+  const { user } = req.user;
+  const { id } = user;
+  const body = req.body;
+  try {
+    const user = await userService.updateUserByJWT(id, body);
+    return res
+      .status(200)
+      .json({ code: 200, msg: "El usuario ha sido actualizado", extra: user });
+  } catch (error) {
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
 exports.deleteUser = async (req, res) => {
   const userId = req.params.id;
   try {
-    await User.destroy({ where: { id: userId } });
-    const messageResponse = formatMessage(200, "User has been deleted");
-    res.status(200).send(messageResponse);
+    await userService.userExist(userId);
+    await userService.deleteUser(userId);
+    return res
+      .status(200)
+      .json({ code: 200, msg: "El usuario ha sido eliminado" });
   } catch (error) {
-    const messageResponse = formatError(error, 500, null);
-    res.status(500).send(messageResponse);
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
-
+//#endregion
+//#region Profile images User Methods
 exports.updateImageProfileUser = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
@@ -59,53 +77,16 @@ exports.updateImageProfileUser = async (req, res) => {
   const fileType = myFile[myFile.length - 1];
   const buffer = req.file.buffer;
 
-  const userExist = await User.findByPk(id);
-
-  if (!userExist) {
-    return res.status(404).json({ code: 404, message: "El usuario no existe" });
-  }
-  imageService.updateImageProfile(fileType, buffer, id, res);
-};
-
-
-exports.Blacklist = async (req, res) => {
-  const { user } = req.user;
-  const { id: blockerId } = user;
-  const blockedId = req.params.id;
   try {
-    if (blockerId === parseInt(blockedId)) {
-      throw validationError(500, "No te puedes bloquear a ti mismo");
-    }
-    const blockerUserExist = await User.findByPk(blockerId);
-    const blockedUserExist = await User.findByPk(blockedId);
-    if (!blockerUserExist) {
-      throw validationError(404, "Tu usuario no existe");
-    }
-    if (!blockedUserExist) {
-      throw validationError(404, "El Usuario a bloquear no existe");
-    }
-
-    const userBlock = await Blacklist.findOne({
-      where: {
-        User_id: blockerId,
-        UserBlocked_id: parseInt(blockedId),
-      },
-    });
-
-    if (userBlock) {
-      throw validationError(505, "El Usuario ya esta bloqueado");
-    }
-
-    await Blacklist.create({
-      User_id: blockerId,
-      UserBlocked_id: parseInt(blockedId),
-    });
-
-    return res
-      .status(200)
-      .json({ code: 200, msg: "El Usuario ha sido bloqueado" });
+    await userService.userExist(id);
+    await s3Service.updateImageProfile(fileType, buffer, id);
+    return res.status(200).json({ code: 200, msg: "Imagen Subida con exito" });
   } catch (error) {
-    return res.status(error.code).json({ code: error.code, msg: error.msg });
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
+  }
+};
 
 exports.updateImageBackgroundProfileUser = async (req, res) => {
   const { user } = req.user;
@@ -115,39 +96,37 @@ exports.updateImageBackgroundProfileUser = async (req, res) => {
   const fileType = myFile[myFile.length - 1];
   const buffer = req.file.buffer;
 
-  const userExist = await User.findByPk(id);
-
-  if (!userExist) {
-    return res.status(404).json({ code: 404, message: "El usuario no existe" });
-  }
-  imageService.updateImageBackgroundProfile(fileType, buffer, id, res);
-};
-
-exports.updateUserByJWT = async (req, res) => {
-  const { user } = req.user;
-  const { id } = user;
-  const newUser = req.body;
   try {
-    const user = await User.findOne({ where: { id: id } });
-    await user.update(newUser);
-    const messageResponse = formatMessage(200, "Usuario actualizado");
-    res.status(200).send(messageResponse);
+    await userService.userExist(id);
+    await s3Service.updateImageBackgroundProfile(fileType, buffer, id);
+    return res.status(200).json({ code: 200, msg: "Imagen Subida con exito" });
   } catch (error) {
-    const messageResponse = formatError(null, 500, "User does not exist");
-    res.status(500).send(messageResponse);
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
-
-exports.getUserByJWT = async (req, res) => {
+//#endregion
+//#region Blacklist User Methods
+exports.Blacklist = async (req, res) => {
   const { user } = req.user;
-  const { id } = user;
+  const { id: blockerId } = user;
+  const blockedId = req.params.id;
   try {
-    const user = await User.findOne({ where: { id: id } });
-    const messageResponse = formatMessage(200, user);
-    res.status(200).send(messageResponse);
-  } catch (error) {
-    const messageResponse = formatError(null, 500, "User does not exist");
-    res.status(500).send(messageResponse);
+    await blacklistService.compareTwoIds(blockerId, blockedId);
+    await userService.userExist(blockerId);
+    await userService.userExist(blockedId);
+    await blacklistService.findBlockUser(blockerId, blockedId);
+    await blacklistService.findBlockUser(blockedId, blockerId);
+    await blacklistService.addToBlacklist(blockerId, blockedId);
 
+    return res
+      .status(200)
+      .json({ code: 200, msg: "El Usuario ha sido bloqueado" });
+  } catch (error) {
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
+//#endregion

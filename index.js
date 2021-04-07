@@ -8,7 +8,7 @@ const {
   interfacesRoutes,
   categoryRoutes,
   commentRoutes,
-  reaccionRoutes 
+  reaccionRoutes,
 } = require("./api/routes"); //Import Routes
 const { transporter } = require("./config/nodeMailerConfig/development");
 

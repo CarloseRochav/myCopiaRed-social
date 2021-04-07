@@ -1,110 +1,86 @@
-const { formatMessage } = require("../helpers");
-const { Post, User, Comments } = require("../models");
+const { postService, userService, commentService } = require("../services");
 
-//cambie User por Post para adapaptarlo
 exports.getComments = async (req, res) => {
   try {
-    const comments = await Post.findAll();
-    res.status(200).send(comments);
+    const comments = await commentService.getComments();
+    return res.status(200).json({ code: 200, msg: comments });
   } catch (error) {
-    res.status(500).send("An error has occurred with the server.");
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
 exports.createComments = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
-  const  userExist = await User.findByPk(id);
-
   const postId = req.params.idpost;
-  const postExist = await Post.findByPk(postId);
 
-  try { 
-    if(!userExist){
-      throw res.status(404).send("Usuario no exist");
-      
-    }
-    if(!postExist){
-        throw res.status(404).send("Publicación no existe");
-    }
-    await Comments.create({
-      comment: req.body.comment,
-      User_id: id,
-      Post_id: postId,
+  try {
+    await userService.userExist(id);
+    await postService.postExist(postId);
+    await commentService.createComment(req.body.comment);
 
-      
-    });
-    res.status(201).send("Comentario creado exitosamente ");
-
+    return res
+      .status(200)
+      .json({ code: 200, msg: "Comentario creado exitosamente" });
   } catch (error) {
-    res.status(500).send(error);  
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
 exports.getCommentsById = async (req, res) => {
   const commentId = req.params.id;
   try {
-    const comment = await Comments.findOne({ where: { id: commentId } });
-    res.status(200).send(comment);
+    const comment = commentService.getCommentById(commentId);
+    return res.status(200).json({ code: 200, msg: comment });
   } catch (error) {
-    res.status(500).send("An error has occurred with the server.");
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
-
 exports.updateComments = async (req, res) => {
   const { user } = req.user;
-  const { id } = user; 
-  const userExist = await User.findByPk(id);
-
-  const postId  = req.params.idpost;
-  const postExist = await Post.findByPk(postId);
-
+  const { id } = user;
+  const postId = req.params.idpost;
   const commentId = req.params.idcomment;
   const newComment = req.body;
-  const commentExist = await Comments.findByPk(commentId);
 
-    try {
-      if(!userExist){
-        throw res.status(404).send("Usuario no existe")
-      }
-      if(!postExist){
-        throw res.status(404).send("Publicación no existe")
-      }
-      if(!commentExist){
-        throw res.status(404).send("Comentario no existe")
-      }
-     await Comments.update({comment:  newComment.comment}, { where: {id: commentId, Post_id: postId, User_id: id } });
-      
-      res.status(200).send("Comment data has been updated.");
-    } catch (error) {
-      res.status(500).send("An error has occurred with the server.");
-    }
-  };
+  try {
+    await userService.userExist(id);
+    await postService.postExist(postId);
+    await commentService.commentExist(commentId);
+    await Comments.update(
+      { comment: newComment.comment },
+      { where: { id: commentId, Post_id: postId, User_id: id } }
+    );
 
+    return res.status(200).json({ code: 200, msg: "Comentario Actualizado" });
+  } catch (error) {
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
+  }
+};
 exports.deleteComments = async (req, res) => {
   const { user } = req.user;
-  const { id } = user; 
-  const userExist = await User.findByPk(id);
-
+  const { id } = user;
   const postId = req.params.idpost;
-  const postExist = await Comments.findByPk(postId);
-  
   const commentId = req.params.idcomment;
-  const commentExist = await Comments.findByPk(commentId);
+
   try {
-    if(!userExist){
-      throw res.status(404).send("Usuario no existe")
-    }
-    if(!postExist){
-      throw res.status(404).send("Publicación no existe")
-    }
-    if(!commentExist){
-        throw res.status(404).send("Comentario no existe")
-      }
-    await Comments.destroy({ where: {id: commentId,  Post_id: postId, User_id: id } });
-    res.status(200).send("Comment has been deleted.");
+    await userService.userExist(id);
+    await postService.postExist(postId);
+    await commentService.commentExist(commentId);
+    await commentService.destroyComment(commentId, postId, id);
+    return res.status(200).json({ code: 200, msg: "Comentario eliminado" });
   } catch (error) {
-    res.status(500).send(error);
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };

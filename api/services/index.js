@@ -1,4 +1,11 @@
 module.exports = {
   mailerService: require("./nodeMailerService"),
-  imageService: require("./s3ImageService"),
+  s3Service: require("./s3Service"),
+  userService: require("./userService"),
+  postService: require("./postService"),
+  blacklistService: require("./blacklistService"),
+  authService: require("./authService"),
+  categoryService: require("./categoryService"),
+  commentService: require("./commentService"),
+  reaccionService: require("./reaccionService"),
 };
