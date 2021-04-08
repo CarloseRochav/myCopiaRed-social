@@ -1,12 +1,13 @@
-const { formatError, formatMessage } = require("../helpers");
-const { Category, User } = require("../models");
+const { categoryService, userService } = require("../services");
 
 exports.getCategories = async (req, res) => {
   try {
-    const categories = await Category.findAll();
-    res.status(200).json({ code: 200, message: categories });
+    const categories = await categoryService.getCategories();
+    return res.status(200).json({ code: 200, msg: categories });
   } catch (error) {
-    res.status(500).send("An error has occurred with the server.");
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -14,22 +15,16 @@ exports.createCategories = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
   try {
-    const userExist = await User.findByPk(id);
-    if (!userExist) {
-      throw res
-        .status(404)
-        .json({ code: 404, message: "El usuario no existe" });
-    }
+    await userService.userExist(id);
+    await categoryService.createCategory(req.body.name);
 
-    await Category.create({
-      name: req.body.name,
-    });
-
-    res
+    return res
       .status(200)
-      .json({ code: 200, message: "Categoria creada exitosamente" });
+      .json({ code: 200, msg: "Categoria creada exitosamente" });
   } catch (error) {
-    res.status(500).json({ code: 500, message: error });
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
 
@@ -39,23 +34,15 @@ exports.deleteCategory = async (req, res) => {
   const categoryId = req.params.id;
 
   try {
-    const userExist = await User.findByPk(id);
-    const categoryExist = await Category.findByPk(categoryId);
-    if (!userExist) {
-      throw res
-        .status(404)
-        .json({ code: 404, message: "El usuario no existe" });
-    }
-    if (!categoryExist) {
-      throw res
-        .status(404)
-        .json({ code: 404, message: "La categoria no existe" });
-    }
-    await Category.destroy({ where: { id: categoryId } });
-    res
+    await userService.userExist(id);
+    await categoryService.categoryExist(categoryId);
+    await categoryService.destroyCategory(categoryId);
+    return res
       .status(200)
-      .json({ code: 200, message: "La categoria ha sido borrada" });
+      .json({ code: 200, msg: "Categoria borrada exitosamente" });
   } catch (error) {
-    res.status(500).json({ code: 500, message: error });
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };

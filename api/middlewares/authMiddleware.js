@@ -13,7 +13,8 @@ module.exports = (req, res, next) => {
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
         res.status(500).json({
-          message: "Ha ocurrido un problema al decodificar el token",
+          code: 500,
+          msg: "Ha ocurrido un problema al decodificar el token",
           err,
         });
       } else {

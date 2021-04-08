@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: "interfaces",
+      tableName: "Interfaces",
     }
   );
   return Interface;

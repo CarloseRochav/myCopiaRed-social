@@ -125,9 +125,16 @@ module.exports = (sequelize, DataTypes) => {
     User.hasOne(models.Gallery,{
       foreignKey:"User_id",
     });
+    User.hasMany(models.Comments, {
+      foreignKey: "User_id",
+    });
+    User.hasMany(models.Reaccions, {
+      foreignKey: "User_id",
+    });
+    User.hasMany(models.Blacklist, {
+      foreignKey: "User_id",
+    });
+  };
 
-  }
-
-  return User;  
-  
+  return User;
 };

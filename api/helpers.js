@@ -1,33 +1,3 @@
-exports.formatError = (error, code, messagePersonalized = null) => { //Metodo que recibe 3 parametros y regresa mensaje si es error o no
-  let messageError = null;
-  // if (error) {
-  //   const { errors } = error;
-  //   const { message } = errors[0];
-  //   messageError = message;
-  // }
-
-  const {name}=error; //Nombre del error
-  
-  if(name=="SequelizeUniqueConstraintError")
-    messageError="El usuario ha ingresado un valor que debe ser unico";
-  if(name=="SequelizeValidationError")
-    messageError="Un dato no es correcto, corrige tu error";
-
-  const response = {
-    code: code,
-    message: messagePersonalized ? messagePersonalized : messageError,
-  };
-  return response;
-};
-
-exports.formatMessage = (code, messagePersonalized = "") => {
-  const response = {
-    code: code,
-    message: messagePersonalized,
-  };
-  return response;
-};
-
 exports.random = () => {
   var x = "";
   for (var i = 0; i < 6; i++) {
@@ -36,7 +6,24 @@ exports.random = () => {
   return x;
 };
 
+exports.customError = (code = 500, msg = "Error en el sistema") => {
+  const error = new Error();
+  error.code = code;
+  error.msg = msg;
+  return error;
+};
 
-// Sequelize ->
-// "name":"SequelizeUniqueConstraintError"
-// "name": "SequelizeValidationError"
+exports.getPagination = (page, size) => {
+  const limit = size ? +size : 3;
+  const offset = page ? page * limit : 0;
+
+  return { limit, offset };
+};
+
+exports.getPagingData = (data, page, limit) => {
+  const { count: totalItems, rows: content } = data;
+  const currentPage = page ? +page : 0;
+  const totalPages = Math.ceil(totalItems / limit);
+
+  return { totalItems, content, totalPages, currentPage };
+};

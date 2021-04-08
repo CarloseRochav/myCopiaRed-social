@@ -41,6 +41,14 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "Post",
     }
   );
+  Post.associate = function (models) {
+    Post.hasMany(models.Comments, {
+      foreignKey: "Post_id",
+    });
+    Post.hasMany(models.Reaccions, {
+      foreignKey: "Post_id",
+    });
+  };
 
   return Post;
 };

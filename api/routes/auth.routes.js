@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { authController } = require("../controllers");
 const { authMiddleware } = require("../middlewares");
+//const {oauthPassport} = require('../middlewares');
+const passport = require("passport");
 
 router.post("/signup", authController.signUp);
 
@@ -16,5 +18,8 @@ router.put(
   authMiddleware,
   authController.changePassword
 );
+
+//Token Google 
+router.post("/authGoogle",passport.authenticate("googleToken",{session:false}));
 
 module.exports = router;

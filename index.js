@@ -1,13 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const { sequelize } = require("./api/models");
-
 const {
   userRoutes,
   authRoutes,
   postRoutes,
   interfacesRoutes,
   categoryRoutes,
+  commentRoutes,
+  reaccionRoutes,
 } = require("./api/routes"); //Import Routes
 const { transporter } = require("./config/nodeMailerConfig/development");
 
@@ -28,6 +29,8 @@ const port = process.env.PORT || 8080;
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(postRoutes);
+app.use(commentRoutes);
+app.use(reaccionRoutes);
 app.use(interfacesRoutes);
 app.use(categoryRoutes);
 

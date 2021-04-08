@@ -8,8 +8,6 @@ router.get("/usuarios", userController.getUsers);
 
 router.get("/usuarios/:id", userController.getUserById);
 
-router.put("/usuarios/:id", userController.updateUser);
-
 router.delete("/usuarios/:id", userController.deleteUser);
 
 //  Perfil
@@ -38,5 +36,6 @@ router.get("/getAll",authMiddleware,userController.getAllObjects);//Obtener todo
 //Eliminar un objeto
 router.post("/deleteObject",authMiddleware,userController.deleteObject);
 
+router.post("/blacklist/:id", authMiddleware, userController.Blacklist);
 
 module.exports = router;
