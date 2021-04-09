@@ -19,7 +19,7 @@ exports.createComments = async (req, res) => {
   try {
     await userService.userExist(id);
     await postService.postExist(postId);
-    await commentService.createComment(req.body.comment);
+    await commentService.createComment(req.body.comment, id, postId);
 
     return res
       .status(200)
