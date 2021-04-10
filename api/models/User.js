@@ -4,6 +4,17 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
     {
+      idGoogle:{
+        type:DataTypes.BIGINT,
+        allowNull:true,
+        unique:true
+
+      },
+      idFacebook:{
+        type:DataTypes.BIGINT,
+        allowNull:true,
+        unique:true
+      },
       name: {
         //Name
         type: DataTypes.STRING,
