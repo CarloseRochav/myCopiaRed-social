@@ -21,14 +21,21 @@ passport.use("googleToken",new googlePlusTokenStrategy({
     console.log("accessToken",accessToken);
     console.log("refreshToken",refreshToken);
     console.log("profile",profile);
+    console.log("id de usuario google : ",profile.id);
+    console.log("Nombres : ",profile.name.givenName);
+    console.log("Apellidos : ",profile.name.familyName);    
+    console.log("Email : ",profile.emails[0].value);
+    console.log("imageURL : ",profile.photos[0].value);
 
-    const userExist = User.findOne(
-        {where:
-            {
-                idGoogle:profile.id.value
-            }
+    
+    const idPro = parseInt(profile.id)
+    
+    const userExist =await User.findOne(
+        {
+            where:{idGoogle:idPro}
         }
         )
+    
     
     if(userExist){
         return( done(null,false),
@@ -37,10 +44,21 @@ passport.use("googleToken",new googlePlusTokenStrategy({
 
     if(!userExist){
 
-        Console.log("Este usuario no existe")
-        // const newUser = new User({
-            
-        // })
+        console.log("Este usuario no existe")
+        //console.log(`El tipo de dato de ${idPro} es : ${typeof(idPro)}`);
+        // const newUser = new User(
+        //     {
+        //         idGoogle:profile.id
+        //         name:profile.name.givenName ,
+        //         password: "benito123",
+        //         picture: profile.photos[0].value,
+        //         birth: "04/11/1999",
+        //         email: profile.emails[0].value,
+        //         phone:6641275239,
+        //         address: "Centro",
+        //         role:4
+        //     }
+        // )
     }
 
 
