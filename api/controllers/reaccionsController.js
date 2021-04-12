@@ -52,7 +52,9 @@ exports.createReaccions = async (req, res) => {
   try {
     await userService.userExist(id);
     await postService.postExist(postId);
+    await postService.addReaction(postId);
     await reaccionService.createReaccions(id, postId);
+
     return res
       .status(200)
       .json({ code: 200, msg: "Reaccion creada con exito" });
@@ -72,6 +74,7 @@ exports.deleteReaccions = async (req, res) => {
     await postService.postExist(postId);
     await reaccionService.reactionExist(postId, id);
     await reaccionService.destroyReaction(postId, id);
+    await postService.removeReaction(postId);
     return res
       .status(200)
       .json({ code: 200, msg: "Reaccion eliminada con exito" });

@@ -18,7 +18,7 @@ router.get(
 );
 
 router.get(
-  "/reaccion/byuser",
+  "/reaccionsis",
   authMiddleware,
   reaccionsController.getReaccionsByUser
 );

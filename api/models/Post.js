@@ -1,5 +1,5 @@
 //Definicion de modelo Publicaciones.
-"use strict";
+("use strict");
 
 module.exports = (sequelize, DataTypes) => {
   const Post = sequelize.define(
@@ -36,12 +36,34 @@ module.exports = (sequelize, DataTypes) => {
       longitude: {
         type: DataTypes.STRING,
       },
+      commentsCount: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      reactionsCount: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      User_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "User",
+          key: "id",
+        },
+        field: "User_id",
+      },
     },
     {
       tableName: "Post",
     }
   );
+
   Post.associate = function (models) {
+    Post.hasOne(models.User, {
+      foreignKey: "id",
+      sourceKey: "User_id",
+    });
     Post.hasMany(models.Comments, {
       foreignKey: "Post_id",
     });

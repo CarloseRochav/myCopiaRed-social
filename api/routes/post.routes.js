@@ -3,7 +3,7 @@ const router = express.Router();
 const { postController } = require("../controllers");
 const { authMiddleware, uploadMiddleware } = require("../middlewares");
 
-router.get("/post", postController.getPost);
+router.get("/post", authMiddleware, postController.getPost);
 
 router.post(
   "/post",

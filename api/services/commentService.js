@@ -1,4 +1,4 @@
-const { Comments } = require("../models");
+const { Comments, User } = require("../models");
 const { customError } = require("../helpers");
 
 exports.getComments = async () => {
@@ -21,6 +21,25 @@ exports.getCommentById = async (_id) => {
   const comment = await Comments.findOne({ where: { id: _id } });
   return comment;
 };
+exports.commentExist = async (_id) => {
+  const commentId = parseInt(_id);
+  const comment = await Comment.findOne({
+    where: { id: commentId ? commentId : -10 },
+  });
+  if (!comment) {
+    throw customError(404, "El usuario no existe.");
+  }
+  return comment;
+};
+
+exports.getCommentByPostId = async (_id) => {
+  const comments = await Comments.findAll({
+    where: { Post_id: _id },
+    include: [{ model: User, attributes: ["id", "name", "picture"] }],
+  });
+  return comments;
+};
+
 exports.commentExist = async (_id) => {
   const commentId = parseInt(_id);
   const comment = await Comment.findOne({

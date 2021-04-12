@@ -1,4 +1,5 @@
 //Definicion de modelo Usuario
+
 "use strict";
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
