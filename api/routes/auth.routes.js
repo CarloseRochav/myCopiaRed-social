@@ -20,6 +20,7 @@ router.put(
 );
 
 //Token Google 
-router.post("/authGoogle",passport.authenticate("googleToken",{session:false}));
+router.post("/aut/Google",passport.authenticate("googleToken",{session:false}));
+router.post("/auth/Facebook",passport.authenticate("facebookToken",{session:false}));
 
 module.exports = router;

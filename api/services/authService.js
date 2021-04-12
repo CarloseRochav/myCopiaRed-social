@@ -17,7 +17,7 @@ exports.randomNumber = () => {
 exports.verifyPasswordLength = (_password) => {
   const password = _password;
   if (password.length <= 6) {
-    throw customError(500, "La conseña es muy corta.");
+    throw customError(500, "La contraseña es muy corta.");
   }
   return password;
 };
@@ -31,7 +31,7 @@ exports.createToken = (externalPassword, _userDB) => {
     throw customError(500, "La conseña es incorrecta.");
   }
 
-  const token = jwt.sign(
+  const token = jwt.sign(//Generacion de token
     {
       user: {
         id: id,

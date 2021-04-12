@@ -44,6 +44,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+       //Picture
       picture: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -54,8 +55,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       description: {
         type: DataTypes.STRING,
-      },
-      //Picture
+      },     
       birth: {
         type: DataTypes.DATE,
         allowNull: true,

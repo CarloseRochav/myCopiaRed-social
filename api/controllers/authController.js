@@ -88,3 +88,30 @@ exports.verifyUser = async (req, res) => {
       .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
+
+exports.verifyUserExt = async (req,res)=>{//Verificar usuarios de google/facebook
+  const {code,birth,phone,role,address} = req.body;//Datos para actualizar y verificar
+  const {User}=require('../models');//Modelo del usuario
+
+  try{//Intenta acualizar los datos de el usuario recien registrado
+     User.update({
+       birth:birth,
+       phone:phone,
+       role:role,
+       address:address      
+    },
+    {where:{
+      noConfirmation:code,isActiva:false}//Donde cumpla los dos campos
+    });
+
+    await userService.updateUserByNumber(code);//Activa la cuenta a isActivate = true;    
+  
+  }catch{
+    return res
+      .status(500)
+      .json({msg:"Error al ingresar los datos"});
+  }
+
+  
+  
+}
