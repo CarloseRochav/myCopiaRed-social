@@ -60,6 +60,6 @@ app.listen(port, "0.0.0.0", () => {
 
 
 // Role.create({
-//   name:"Usuario",
+//   name:"Normal",
 //   description:"Usuario comun"
 // });
