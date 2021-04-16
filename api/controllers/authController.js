@@ -1,4 +1,6 @@
 const { mailerService, authService, userService } = require("../services");
+const passport=require('passport');
+
 
 exports.signUp = async (req, res) => {
   const password = req.body.password;
@@ -110,8 +112,7 @@ exports.verifyUserExt = async (req,res)=>{//Verificar usuarios de google/faceboo
     return res
       .status(500)
       .json({msg:"Error al ingresar los datos"});
-  }
-
-  
+  }  
   
 }
+

@@ -5,13 +5,13 @@ module.exports = (sequelize, DataTypes) => {
     "User",
     {
       idGoogle:{
-        type:DataTypes.BIGINT,
+        type:DataTypes.STRING,
         allowNull:true,
         unique:true
 
       },
       idFacebook:{
-        type:DataTypes.BIGINT,
+        type:DataTypes.STRING,
         allowNull:true,
         unique:true
       },

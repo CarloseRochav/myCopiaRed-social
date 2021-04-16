@@ -3,6 +3,7 @@ const { secret, expires, rounds } = require("../../config/auth");
 const { random, customError } = require("../helpers");
 const randomstring = require("randomstring");
 const jwt = require("jsonwebtoken");
+const passport = require("passport");
 
 exports.hashPassword = (password) => {
   const hashPassword = bcrypt.hashSync(password, +rounds);
@@ -46,6 +47,26 @@ exports.createToken = (externalPassword, _userDB) => {
     }
   );
   return token;
+};
+
+exports.googleToken=(req,res)=>{ //Generacion de token para usuarios de google
+  const {id,email,role_id,password} = req.user;
+
+  const token=jwt.sign( //Generacion de token google
+    {
+      user:{
+        id:id, 
+        password:password,
+        email:email,
+        role:role_id
+      },
+    },
+    secret,
+    {
+      expiresIn:expires
+    }
+  );
+  return req.body;
 };
 
 exports.comparePasswords = (password, externalPassword) => {

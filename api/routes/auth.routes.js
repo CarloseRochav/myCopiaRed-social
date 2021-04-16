@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const { authController } = require("../controllers");
 const { authMiddleware } = require("../middlewares");
+const {authService}=require('../services');
 //const {oauthPassport} = require('../middlewares');
 const passport = require("passport");
-const passportGoogleSignUp = passport.authenticate("googleTokenSignUp",{session:false});
+const passportGoogle = passport.authenticate("googleToken",{session:false});
 
 router.post("/signup", authController.signUp);
 
@@ -21,8 +22,11 @@ router.put(
 );
 
 //Token Google 
-router.post("/signup/google",passportGoogleSignUp);//Dada de alta
+router.post(
+  "/signup/google",
+  passportGoogle,
+  authService.googleToken);//Dada de alta
 //router.post("/singin/Google",passportGoogle,);//Generacion de token
-router.post("/auth/facebook",passport.authenticate("facebookToken",{session:false}));
+//router.post("/auth/facebook",passport.authenticate("facebookToken",{session:false}));
 
 module.exports = router;
