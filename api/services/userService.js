@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { Users } = require("../../database/models");
 const { customError } = require("../helpers");
 
 exports.createUser = async (body, _hashPassword, _randomNumber) => {
@@ -10,15 +10,17 @@ exports.createUser = async (body, _hashPassword, _randomNumber) => {
     email: body.email,
     phone: body.phone,
     address: body.address,
-    role_id: body.role ? body.role : 4,
+    isPublic: true,
+    isBlocked: false,
+    Roles_id: body.role ? body.role : 4,
     noConfirmation: _randomNumber,
   };
-  await User.create(newUser);
+  await Users.create(newUser);
   return newUser;
 };
 
 exports.getUsers = async () => {
-  const users = await User.findAll();
+  const users = await Users.findAll();
   if (!users || !users.length) {
     throw customError(404, "No hay usuarios en la base de datos.");
   }
@@ -37,13 +39,13 @@ exports.updateUserByJWT = async (userId, body) => {
 };
 
 exports.deleteUser = async (userId) => {
-  const destroy = await User.destroy({ where: { id: userId } });
+  const destroy = await Users.destroy({ where: { id: userId } });
   return destroy;
 };
 
 exports.userExist = async (_userId) => {
   const userId = parseInt(_userId);
-  const user = await User.findOne({ where: { id: userId ? userId : -10 } });
+  const user = await Users.findOne({ where: { id: userId ? userId : -10 } });
   if (!user) {
     throw customError(404, "El usuario no existe.");
   }
@@ -51,7 +53,7 @@ exports.userExist = async (_userId) => {
 };
 
 exports.userExistWithEmailPassword = async (_email, _password) => {
-  const user = await User.findOne({
+  const user = await Users.findOne({
     where: { email: _email, password: _password },
   });
   if (!user) {
@@ -62,7 +64,7 @@ exports.userExistWithEmailPassword = async (_email, _password) => {
 
 exports.userExistWithEmail = async (_email) => {
   const userEmail = _email;
-  const user = await User.findOne({
+  const user = await Users.findOne({
     where: { email: userEmail },
   });
   if (!user) {
@@ -72,7 +74,7 @@ exports.userExistWithEmail = async (_email) => {
 };
 
 exports.userIsValid = async (_email) => {
-  const user = await User.findOne({
+  const user = await Users.findOne({
     where: { email: _email, isActivate: true },
   });
   if (!user) {
@@ -82,7 +84,7 @@ exports.userIsValid = async (_email) => {
 };
 
 exports.updateUserPassword = async (_password, _email) => {
-  await User.update(
+  await Users.update(
     { password: _password },
     {
       where: {
@@ -93,7 +95,7 @@ exports.updateUserPassword = async (_password, _email) => {
 };
 
 exports.updateUserByNumber = async (_code) => {
-  const actualizado = await User.update(
+  const actualizado = await Users.update(
     { isActivate: true },
     {
       where: {

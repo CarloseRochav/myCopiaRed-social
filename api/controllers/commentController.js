@@ -1,4 +1,5 @@
 const { postService, userService, commentService } = require("../services");
+const { Comments } = require("../../database/models");
 
 exports.getComments = async (req, res) => {
   try {
@@ -35,7 +36,7 @@ exports.createComments = async (req, res) => {
 exports.getCommentsById = async (req, res) => {
   const commentId = req.params.id;
   try {
-    const comment = commentService.getCommentById(commentId);
+    const comment = await commentService.getCommentById(commentId);
     return res.status(200).json({ code: 200, msg: comment });
   } catch (error) {
     return res
@@ -67,8 +68,8 @@ exports.updateComments = async (req, res) => {
     await postService.postExist(postId);
     await commentService.commentExist(commentId);
     await Comments.update(
-      { comment: req.body },
-      { where: { id: commentId, Post_id: postId, User_id: id } }
+      { comment: req.body.comment },
+      { where: { id: commentId, Posts_id: postId, Users_id: id } }
     );
 
     return res.status(200).json({ code: 200, msg: "Comentario Actualizado" });

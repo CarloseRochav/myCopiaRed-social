@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { sequelize } = require("./api/models");
+const { sequelize } = require("./database/models/index");
 const {
   userRoutes,
   authRoutes,
@@ -49,11 +49,11 @@ app.listen(port, "0.0.0.0", () => {
     });
   // Contectandose a la base de datos
   sequelize
-    .sync({ force: false }) //Sincroniza el modelo con la base de datos false || true
+    .authenticate()
     .then(() => {
-      console.log("Conectado a la base de datos");
+      console.log("Conectado a la base de datos.");
     })
-    .catch((error) => {
-      console.log("No se ha conectado a la base de datos" + error);
+    .catch((err) => {
+      console.error("No es posible conectarse a la base de datos:", err);
     });
 });

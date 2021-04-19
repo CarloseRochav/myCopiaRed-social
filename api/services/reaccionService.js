@@ -1,8 +1,8 @@
-const { Reaccions } = require("../models");
+const { Reactions } = require("../../database/models");
 const { customError, getPagination, getPagingData } = require("../helpers");
 
 exports.getReaccions = async () => {
-  const likes = await Reaccions.findAll();
+  const likes = await Reactions.findAll();
   if (!likes || !likes.length) {
     throw customError(404, "No hay Reacciones en la base de datos");
   }
@@ -12,10 +12,10 @@ exports.getReaccions = async () => {
 exports.getReaccionsByPost = async (idPost, page, size) => {
   const { limit, offset } = getPagination(page, size);
 
-  const content = await Reaccions.findAndCountAll({
+  const content = await Reactions.findAndCountAll({
     limit: limit,
     offset: offset,
-    where: { Post_id: idPost },
+    where: { Posts_id: idPost },
   });
   const responseContent = getPagingData(content, page, limit);
 
@@ -25,10 +25,10 @@ exports.getReaccionsByPost = async (idPost, page, size) => {
 exports.getReaccionsByUser = async (idUser, page, size) => {
   const { limit, offset } = getPagination(page, size);
 
-  const content = await Reaccions.findAndCountAll({
+  const content = await Reactions.findAndCountAll({
     limit: limit,
     offset: offset,
-    where: { User_id: idUser },
+    where: { Users_id: idUser },
   });
   const responseContent = getPagingData(content, page, limit);
 
@@ -36,22 +36,22 @@ exports.getReaccionsByUser = async (idUser, page, size) => {
 };
 
 exports.createReaccions = async (userId, postId) => {
-  const likeExist = await Reaccions.findAll({
-    where: { Post_id: postId, User_id: userId },
+  const likeExist = await Reactions.findAll({
+    where: { Posts_id: postId, Users_id: userId },
   });
   if (likeExist.length) {
     throw customError(500, `Ya habias reaccionado a este post`);
   }
 
-  await Reaccions.create({
-    User_id: userId,
-    Post_id: postId,
+  await Reactions.create({
+    Users_id: userId,
+    Posts_id: postId,
   });
 };
 
 exports.reactionExist = async (postId, userId) => {
-  const reaction = await Reaccions.findOne({
-    where: { Post_id: postId, User_id: userId },
+  const reaction = await Reactions.findOne({
+    where: { Posts_id: postId, Users_id: userId },
   });
   if (!reaction) {
     throw customError(404, "La reaccion no existe");
@@ -60,7 +60,7 @@ exports.reactionExist = async (postId, userId) => {
 };
 
 exports.destroyReaction = async (postId, userId) => {
-  await Reaccions.destroy({
-    where: { Post_id: postId, User_id: userId },
+  await Reactions.destroy({
+    where: { Posts_id: postId, Users_id: userId },
   });
 };

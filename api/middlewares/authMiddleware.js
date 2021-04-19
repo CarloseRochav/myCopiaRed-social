@@ -4,7 +4,7 @@ const { secret } = require("../../config/auth"); //usando la configuracion secre
 module.exports = (req, res, next) => {
   // Comprobar que existe el token
   if (!req.headers.authorization) {
-    res.status(401).json({ message: "Acceso no autorizado" });
+    res.status(401).json({ code: 401, msg: "Acceso no autorizado" });
   } else {
     //comprobar la validez de este token
     const token = req.headers.authorization.split(" ")[1];

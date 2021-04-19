@@ -24,7 +24,9 @@ exports.signIn = async (req, res) => {
   try {
     const user = await userService.userIsValid(email);
     const token = authService.createToken(password, user);
-    return res.status(200).json({ code: 200, msg: token });
+    return res
+      .status(200)
+      .json({ code: 200, msg: token, rolID: user.Roles_id });
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
@@ -34,14 +36,10 @@ exports.signIn = async (req, res) => {
 
 exports.changePassword = async (req, res) => {
   const { user } = req.user;
-  const { email, password } = user;
+  const { email } = user;
   const newPassword = req.body.password;
   try {
-    const userDb = await userService.userExistWithEmailPassword(
-      email,
-      password
-    );
-    authService.comparePasswords(password, userDb.password);
+    await userService.userIsValid(email);
     const newHashPassword = authService.hashPassword(newPassword);
     await userService.updateUserPassword(newHashPassword, email);
     await mailerService.sendChangePassword(email, newPassword);

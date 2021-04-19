@@ -1,4 +1,4 @@
-const { Blacklist } = require("../models");
+const { Blacklist } = require("../../database/models");
 const { customError } = require("../helpers");
 
 exports.findBlockUser = async (_idOne, _idTwo) => {

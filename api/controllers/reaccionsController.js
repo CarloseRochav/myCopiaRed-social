@@ -52,8 +52,8 @@ exports.createReaccions = async (req, res) => {
   try {
     await userService.userExist(id);
     await postService.postExist(postId);
-    await postService.addReaction(postId);
     await reaccionService.createReaccions(id, postId);
+    await postService.addReaction(postId);
 
     return res
       .status(200)

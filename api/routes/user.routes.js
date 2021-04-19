@@ -6,8 +6,6 @@ const { authMiddleware, uploadMiddleware } = require("../middlewares");
 
 router.get("/usuarios", userController.getUsers);
 
-router.get("/usuarios/:id", userController.getUserById);
-
 router.delete("/usuarios/:id", userController.deleteUser);
 
 //  Perfil
