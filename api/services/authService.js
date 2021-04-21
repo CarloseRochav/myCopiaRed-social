@@ -52,6 +52,8 @@ exports.createToken = (externalPassword, _userDB) => {
 exports.googleToken=(req,res)=>{ //Generacion de token para usuarios de google
   const {id,email,role_id,password} = req.user;
 
+  console.log("HOLA NENES");
+
   const token=jwt.sign( //Generacion de token google
     {
       user:{
@@ -66,12 +68,12 @@ exports.googleToken=(req,res)=>{ //Generacion de token para usuarios de google
       expiresIn:expires
     }
   );
-  return req.body;
+  return token;
 };
 
 exports.comparePasswords = (password, externalPassword) => {
   if (bcrypt.compareSync(password, externalPassword)) {
-    throw customError(404, "La conseña no coincide.");
+    throw customError(404, "La contraseña no coincide.");
   }
   return true;
 };
