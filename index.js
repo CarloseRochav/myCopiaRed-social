@@ -9,15 +9,32 @@ const {
   categoryRoutes,
   commentRoutes,
   reaccionRoutes,
+  googleRoutes
 } = require("./api/routes"); //Import Routes
 const { transporter } = require("./config/nodeMailerConfig/development");
 
 // Crear el servidor
 const app = express();
 
-//Uso de bodyP
+//Passport y google
+//require('./api/middlewares/oauthPassportMiddleware');
+const passport = require('passport');
+const session= require('express-session');
+app.use(session({secret:"cats"}));
+app.use(passport.initialize());
+app.use(passport.session());
+// <- Configuraciones necesarias para que confusione google oauth ; Initialize -Index principal
+
+
+//Uso de bodyParser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+
+// const session = require('express-session');
+// app.use(passport.initialize());
+// app.use(passport.session());
+// app.use(session({secret:"cats"}));
 
 // habilitar cors
 app.use(cors());
@@ -33,6 +50,7 @@ app.use(commentRoutes);
 app.use(reaccionRoutes);
 app.use(interfacesRoutes);
 app.use(categoryRoutes);
+app.use(googleRoutes);
 
 //Arrancamos APP
 app.listen(port, "0.0.0.0", () => {
