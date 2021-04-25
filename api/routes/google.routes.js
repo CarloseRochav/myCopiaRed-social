@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-//const { authController } = require("../controllers");
+const { authController,googleFacebookController } = require("../controllers");
 //const { authMiddleware } = require("../middlewares");
 //const {authService}=require('../services');
 require('../middlewares/oauthPassportMiddleware');
@@ -40,9 +40,15 @@ router.get(
   callback
   )
 
-router.get('/google/success',isLoggedIn,(req,res)=>{    
-      res.send(`Hello ${req.user.displayName}`);
-  })
+// router.get('/google/success',isLoggedIn,(req,res)=>{    
+//       res.send(`Hello ${req.user.displayName}`);
+//   })
+
+router.get("/google/success",
+            isLoggedIn,
+            googleFacebookController.googleController,
+            (req,res)=>{console.log(`Mira que lo habeis hecho : ${req.user}`)}
+  )
 
 router.get("/auth/failure",(req,res)=>{
       console.log("Error en la matrix pa");

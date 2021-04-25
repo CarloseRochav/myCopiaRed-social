@@ -169,7 +169,7 @@ passport.use(new googleStrategy({
         passReqToCallback: true
     },(req,accessToken, refreshToken, profile, done) =>{
 
-        console.log("PERFIL",profile);
+        //console.log("PERFIL",profile);
         return done(null, profile);
         
     }

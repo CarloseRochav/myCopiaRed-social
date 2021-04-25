@@ -8,4 +8,5 @@ module.exports = {
   reaccionsController: require("./reaccionsController"),
   categoryController: require("./categoryController"),
   interfaceController: require("./interfaceController"),
+  googleFacebookController:require("./authGoFaController")
 };
