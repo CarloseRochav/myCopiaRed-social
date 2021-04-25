@@ -8,7 +8,7 @@ exports.googleController = async (req,res,next)=>{
     const user=req.user;
     //console.log("PROFILE : ",req.user);
     console.log("id de usuario google : ",user.id);
-    res.send("EXITO");
+    //res.send("EXITO");
     console.log("Nombres : ",user.name.givenName);
     console.log("Apellidos : ",user.name.familyName);    
     console.log("Email : ",user.emails[0].value);
@@ -70,14 +70,14 @@ exports.googleController = async (req,res,next)=>{
         console.log("Este usuario ya esta registrado", googleUser);                   
         //req.user=googleUser;    //No hace falta 
 
-        const token = await authService.googleToken(usuario.id,usuario.password,usuario.email,usuario.role);       
+        const token = await authService.googleToken(googleUser);       
     
         // res.send.json({
         //     Mensaje:" Usuario loggeado",
         //     Token:token
         // })
         
-        res.json({token:token});
+        return res.json({token:token});
      }   
 
      //return next();

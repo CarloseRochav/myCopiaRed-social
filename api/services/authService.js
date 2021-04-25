@@ -49,8 +49,8 @@ exports.createToken = (externalPassword, _userDB) => {
   return token;
 };
 
-exports.googleToken=(id,password,email,role_id,req,res)=>{ //Generacion de token para usuarios de google
-  //const {id,email,role_id,password} = req.user;
+exports.googleToken=(usuario)=>{ //Generacion de token para usuarios de google
+  const {id,names,email,role,password} = usuario;
 
   console.log("HOLA NENES");
 
@@ -60,7 +60,7 @@ exports.googleToken=(id,password,email,role_id,req,res)=>{ //Generacion de token
         id:id, 
         password:password,
         email:email,
-        role:role_id
+        role:role
       },
     },
     secret,
