@@ -17,4 +17,6 @@ router.put(
   authController.changePassword
 );
 
+router.put("/deltsa");
+
 module.exports = router;

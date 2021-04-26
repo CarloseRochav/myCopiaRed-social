@@ -27,7 +27,7 @@ exports.commentExist = async (_id) => {
     where: { id: commentId ? commentId : -10 },
   });
   if (!comment) {
-    throw customError(404, "El usuario no existe.");
+    throw customError(404, "El comentario no existe.");
   }
   return comment;
 };
@@ -51,8 +51,8 @@ exports.commentExist = async (_id) => {
   return comment;
 };
 
-exports.destroyComment = async (commentId, postId, id) => {
+exports.destroyComment = async (commentId, id) => {
   await Comments.destroy({
-    where: { id: commentId, Posts_id: postId, Users_id: id },
+    where: { id: commentId, Users_id: id },
   });
 };

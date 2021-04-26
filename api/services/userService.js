@@ -12,7 +12,7 @@ exports.createUser = async (body, _hashPassword, _randomNumber) => {
     address: body.address,
     isPublic: true,
     isBlocked: false,
-    Roles_id: body.role ? body.role : 4,
+    Roles_id: body.Roles_id ? body.Roles_id : 4,
     noConfirmation: _randomNumber,
   };
   await Users.create(newUser);

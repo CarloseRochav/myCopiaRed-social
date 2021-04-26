@@ -89,7 +89,7 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
   });
 };
 
-exports.uploadCategorieImage = async (name, fileType, buffer) => {
+exports.uploadCategorieImage = async (name, description, fileType, buffer) => {
   const params = {
     Bucket: awsConfig.bucket,
     Key: `${uuidv4()}.${fileType}`,
@@ -104,6 +104,7 @@ exports.uploadCategorieImage = async (name, fileType, buffer) => {
     await Categories.create({
       name: name,
       picture: Location,
+      description: description,
     });
   });
 };

@@ -1,4 +1,9 @@
-const { Posts, Users, Reactions } = require("../../database/models");
+const {
+  Posts,
+  Users,
+  Reactions,
+  Categories,
+} = require("../../database/models");
 const { customError, getPagination, getPagingData } = require("../helpers");
 
 exports.getPosts = async (page, size, id) => {
@@ -13,6 +18,8 @@ exports.getPosts = async (page, size, id) => {
       "thumbnail",
       "video",
       "createdAt",
+      "latitude",
+      "longitude",
       "commentsCount",
       "reactionsCount",
       "Categories_id",
@@ -28,6 +35,10 @@ exports.getPosts = async (page, size, id) => {
           Users_id: id,
         },
         required: false,
+      },
+      {
+        model: Categories,
+        attributes: ["name", "picture", "description"],
       },
     ],
   });
@@ -53,6 +64,8 @@ exports.getAllUserPostsById = async (userId, page, size) => {
       "thumbnail",
       "video",
       "createdAt",
+      "latitude",
+      "longitude",
       "commentsCount",
       "reactionsCount",
     ],
@@ -67,6 +80,10 @@ exports.getAllUserPostsById = async (userId, page, size) => {
           Users_id: userId,
         },
         required: false,
+      },
+      {
+        model: Categories,
+        attributes: ["name", "picture", "description"],
       },
     ],
     where: { Users_id: userId },

@@ -82,15 +82,12 @@ exports.updateComments = async (req, res) => {
 exports.deleteComments = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
-  const postId = req.params.idpost;
-  const commentId = req.params.idcomment;
-
+  const commentId = req.params.id;
   try {
     await userService.userExist(id);
-    await postService.postExist(postId);
-    await commentService.commentExist(commentId);
-    await commentService.destroyComment(commentId, postId, id);
-    await postService.removeComment(postId);
+    const comment = await commentService.commentExist(commentId);
+    await commentService.destroyComment(commentId, id);
+    await postService.removeComment(comment.dataValues.Posts_id);
     return res.status(200).json({ code: 200, msg: "Comentario eliminado" });
   } catch (error) {
     return res

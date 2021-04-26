@@ -21,7 +21,12 @@ exports.createCategories = async (req, res) => {
 
   try {
     await userService.userExist(id);
-    await s3Service.uploadCategorieImage(req.body.name, fileType, buffer);
+    await s3Service.uploadCategorieImage(
+      req.body.name,
+      req.body.description,
+      fileType,
+      buffer
+    );
     return res
       .status(200)
       .json({ code: 200, msg: "Categoria creada exitosamente" });
