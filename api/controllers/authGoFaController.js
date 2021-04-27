@@ -1,6 +1,6 @@
 const {User}=require('../models');
 const {generateNewPassword,hashPassword,randomNumber,googleToken}=require('../services/authService');
-const {authService}=require('../services')
+const {authService,mailerService,userService}=require('../services')
 
 
 exports.googleController = async (req,res,next)=>{
@@ -17,22 +17,27 @@ exports.googleController = async (req,res,next)=>{
     console.log(`Sin ESPACIOS ${user.name.givenName.replace(/[\s+.]/g, '')}`);
 
     
-    const googleGivenName = user.name.givenName.replace(/[\s+.]/gi, '');//Reemplaza puntos y espacios, suprime
+    const nameTranformacion = user.name.givenName.replace(/[\s+.]/gi, '');//Reemplaza puntos y espacios, suprime
+    const newNameTrans=nameTranformacion.normalize("NFD").replace(/[\u0300-\u036f]/g, "");//NFD ; es la forma de normalizacion Unicode
     const randomPass =generateNewPassword();
     const hashPass=hashPassword(randomPass);
     const randomNum = randomNumber();
+    
+    //throw console.log("Nombre sin espacios y sin tildes :",newNameTrans);
 
     
-
+    //const nameRepeat= newNameTrans+user.id;
     const userExist = await User.findOne({where:{idGoogle:user.id}});   
 
     try{
     if(!userExist){
-        
-        const newUser =//Objeto del usuario
+        //const nameUsed = User.findOne({where:{name:newNameTrans}})
+         
+
+            const newUser =//Objeto del usuario
             {
                 idGoogle:user.id,
-                name:googleGivenName,
+                name:newNameTrans,
                 password: hashPass,
                 picture: user.photos[0].value,
                 birth: "01/01/2000",
@@ -41,42 +46,38 @@ exports.googleController = async (req,res,next)=>{
                 address: "Centro",
                 role_id:4,
                 noConfirmation: randomNum
-            }
+            }   
+
+            await User.create(newUser);
+            await mailerService.sendConfirmEmail(newUser.email,randomNum);//Send Email
+
+            console.log("Usuario creado exitosamente",newUser);
+            //Retorna Json
+            return res.json({
+                code:201,
+                msg:{
+                    Usuario:"Usuario Credo Exitosamente",
+                    Aviso:"Por favor ingrese el codigo que se la enviado",
+                    Update:"Actualice sus datos"
+                }
+            });
+        }           
         
 
-        await User.create(newUser);
-        console.log("Usuario creado exitosamente",newUser);        
-        const userNew = User.findOne({where:{idGoogle:newUser.idGoogle}});
+       
+        //const userNew = User.findOne({where:{idGoogle:newUser.idGoogle}});
+
         //req.user=userNew; //No hace falta
         //return done(200,"Registro exitoso")
-
-
-        return next();
-        
-     }
+     
+     
      if(userExist){
-
-        const usuario = userExist;
+      
+        console.log("Este usuario ya esta registrado", userExist);  
+        const user = await userService.userIsValid(userExist.email);
+        const token = await authService.googleToken(user);       
         
-        const googleUser={
-            id:usuario.id,
-            names:usuario.name,
-            email:usuario.email,
-            password:usuario.password,     
-            role:usuario.role_id     
-        }
-
-        
-        console.log("Este usuario ya esta registrado", googleUser);                   
-        //req.user=googleUser;    //No hace falta 
-
-        const token = await authService.googleToken(googleUser);       
-    
-        // res.send.json({
-        //     Mensaje:" Usuario loggeado",
-        //     Token:token
-        // })
-        
+        //Retorna el token
         return res.json({token:token});
      }   
 
@@ -86,4 +87,37 @@ exports.googleController = async (req,res,next)=>{
 catch(err){
     return console.log(err,false,err.message);
     }
+}
+
+//CONTROLADOR PARA FACEBOOK
+
+
+exports.verifyUser= async (req,res)=>{
+    
+    const {code,birth,phone,address}=req.body;
+
+    try{
+        
+        await userService.updateUserByNumber(code)
+        await User.update({
+            birth:birth,
+            phone:phone,
+            address:address
+        },
+        {where:{noConfirmation:code}}
+        )
+            
+
+        res.json({
+            code:201,
+            msg:"Actualizado y validado"
+        })
+
+    }catch(err){
+        res.json({
+            code:501,
+            error: err,
+        })
+    }
+
 }

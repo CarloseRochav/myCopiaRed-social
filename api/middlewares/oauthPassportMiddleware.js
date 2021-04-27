@@ -1,17 +1,30 @@
 const passport = require('passport');
-const facebookTokenStrategy = require('passport-facebook-token');
 //const googlePlusTokenStrategy = require('passport-google-plus-token');
 const googleStrategy= require('passport-google-oauth2').Strategy;//Nueva libreria para google
+const fbStrategy = require('passport-facebook').Strategy;//FB Strategy
 const {User}=require('../models')
 const {generateNewPassword,hashPassword,randomNumber,googleToken}=require('../services/authService');
 //const{mailerService,userService}=require('../services');
 const{GOOGLE_OAUTH_ID,GOOGLE_OAUTH_KEY}=require('../../config/enviromentVars');
 
 //Autentificacion con FACEBOOK
-// passport.use('facebookToken',new facebookTokenStrategy({
-//     clientID:process.env.FB_CLIENTID,
-//     clientSecret:process.env.FB_APP_SECRECT,
-// },async(accessToken,refreshToken,profile,done)=>{
+passport.use(new fbStrategy({
+    clientID:process.env.FB_CLIENTID,
+    clientSecret:process.env.FB_APP_SECRECT,
+    callbackURL:"http://localhost:8080/fb/callback",
+    profileFields: ["email", "name"]
+        
+},async(accessToken,refreshToken,profile,done)=>{
+
+    const { email, first_name, last_name } = profile._json;
+    const userData = {
+      email,
+      firstName: first_name,
+      lastName: last_name
+
+    }
+
+}))
 
 //     console.log("Profile ID : ",profile.id);
 //     console.log("Name : ",profile.displayName);

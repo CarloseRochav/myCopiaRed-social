@@ -24,37 +24,4 @@ router.put(
 
 //-----------------------------------------------------------------------------------------------------------------------------------//
 
-//Token Google 
-// router.post(
-//   "/signup/google",
-//   passportGoogle,(req,es)=>{console.log(req.user)},
-//   authService.googleToken);//Dada de alta
-
-//Middleware Google
-// router.get(
-//   "/signup/google",
-//   googleOauth,
-//   authService.googleToken);//Dada de alta
-
-// //Google Callback
-// router.get(
-//   "/google/callback",passport.authenticate('google',{
-//       successRedirect:'./google/success',
-//       failureRedirect:'./google/failure'
-//   }))
-
-
-//   router.get("/google/success",(req,res)=>{
-//       console.log(req.user);
-//       res.send("EXITOSO");
-//   })
-
-//   router.get("/google/failure",(req,res)=>{
-//       console.log("Error en la matrix pa");
-//   })
-
-
-
-//router.post("/auth/facebook",passport.authenticate("facebookToken",{session:false}));
-
 module.exports = router;

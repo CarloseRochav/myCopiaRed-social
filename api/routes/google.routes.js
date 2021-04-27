@@ -37,12 +37,8 @@ router.get(
 //Google Callback
 router.get(
   "/google/callback",
-  callback
-  )
+  callback  )
 
-// router.get('/google/success',isLoggedIn,(req,res)=>{    
-//       res.send(`Hello ${req.user.displayName}`);
-//   })
 
 router.get("/google/success",
             isLoggedIn,
@@ -59,6 +55,7 @@ router.get("/auth/failure",(req,res)=>{
       req.user? next():res.sendStatus(401);
   }
 
+router.post("/google/verify",googleFacebookController.verifyUser);
 
 //router.post("/auth/facebook",passport.authenticate("facebookToken",{session:false}));
 

@@ -9,7 +9,8 @@ const {
   categoryRoutes,
   commentRoutes,
   reaccionRoutes,
-  googleRoutes
+  googleRoutes,
+  fbRoutes
 } = require("./api/routes"); //Import Routes
 const { transporter } = require("./config/nodeMailerConfig/development");
 
@@ -51,6 +52,7 @@ app.use(reaccionRoutes);
 app.use(interfacesRoutes);
 app.use(categoryRoutes);
 app.use(googleRoutes);
+app.use(fbRoutes);
 
 //Arrancamos APP
 app.listen(port, "0.0.0.0", () => {
