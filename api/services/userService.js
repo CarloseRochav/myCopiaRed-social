@@ -107,3 +107,27 @@ exports.updateUserByNumber = async (_code) => {
     throw customError(404, "El usuario no existe.");
   }
 };
+
+exports.userData = async (foraneoid, casaid) => {
+  const userId = parseInt(casaid);
+  const user = await Users.findOne({
+    attributes: [
+      "id",
+      "name",
+      "picture",
+      "backgroundpicture",
+      "description",
+      "birth",
+      "email",
+      "phone",
+      "address",
+      "isBlocked",
+      "isPublic",
+    ],
+    where: { id: userId ? userId : -10 },
+  });
+  if (!user) {
+    throw customError(404, "El usuario no existe.");
+  }
+  return user;
+};

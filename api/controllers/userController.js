@@ -130,3 +130,17 @@ exports.Blacklist = async (req, res) => {
   }
 };
 //#endregion
+
+exports.getAUserByJWT = async (req, res) => {
+  const { user } = req.user;
+  const { id } = user;
+  const idUserCasa = req.params.id;
+  try {
+    const user = await userService.userData(id, idUserCasa);
+    return res.status(200).json({ code: 200, msg: user });
+  } catch (error) {
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
+  }
+};

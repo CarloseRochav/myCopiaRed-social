@@ -27,6 +27,8 @@ router.post(
   userController.updateImageBackgroundProfileUser
 );
 
+//Interaccion con otros usuarios.
 router.post("/blacklist/:id", authMiddleware, userController.Blacklist);
+router.get("/usuario/:id", authMiddleware, userController.getAUserByJWT);
 
 module.exports = router;

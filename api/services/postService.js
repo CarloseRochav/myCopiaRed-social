@@ -150,3 +150,43 @@ exports.removeComment = async (_idPost) => {
     commentsCount: comment,
   });
 };
+
+exports.getAllUserPostsByIdfromuser = async (userId, profileid, page, size) => {
+  const { limit, offset } = getPagination(page, size);
+
+  const posts = await Posts.findAndCountAll({
+    subQuery: false,
+    attributes: [
+      ["id", "idPost"],
+      "title",
+      "description",
+      "thumbnail",
+      "video",
+      "createdAt",
+      "latitude",
+      "longitude",
+      "commentsCount",
+      "reactionsCount",
+    ],
+    limit: limit,
+    offset: offset,
+    include: [
+      { model: Users, attributes: ["id", "name", "picture"] },
+      {
+        model: Reactions,
+        attributes: [["Users_id", "like_by_user"]],
+        where: {
+          Users_id: userId,
+        },
+        required: false,
+      },
+      {
+        model: Categories,
+        attributes: ["name", "picture", "description"],
+      },
+    ],
+    where: { Users_id: profileid },
+  });
+  const responsePost = getPagingData(posts, page, limit);
+  return responsePost;
+};
