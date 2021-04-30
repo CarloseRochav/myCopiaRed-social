@@ -31,4 +31,8 @@ router.post(
 router.post("/blacklist/:id", authMiddleware, userController.Blacklist);
 router.get("/usuario/:id", authMiddleware, userController.getAUserByJWT);
 
+router.get("/allusers" , authMiddleware, userController.AllUsers);
+
+router.get("/allpost" , authMiddleware, userController.AllPost);
+
 module.exports = router;
