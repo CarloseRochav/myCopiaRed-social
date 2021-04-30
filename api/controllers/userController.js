@@ -1,7 +1,6 @@
-
 const { s3Service, userService, blacklistService } = require("../services");
-const { models } = require("../../database/models");
-const {customError} = require("../helpers");
+const { Users, Posts } = require("../../database/models");
+const { customError } = require("../helpers");
 //#region Basic User Methods
 exports.getUsers = async (req, res) => {
   try {
@@ -147,37 +146,44 @@ exports.getAUserByJWT = async (req, res) => {
   }
 };
 
-
 //Metodo Count
-exports.AllUsers = async (req, res) =>{
+exports.AllUsers = async (req, res) => {
   const { user } = req;
   const { role } = user;
-  try{
-    if( role === 1){
-      throw customError(404,'Solo el Admin puede ver este sitio, jaja, noob');
+  try {
+    if (role === 1) {
+      throw customError(404, "Solo el Admin puede ver este sitio, jaja, noob");
     }
-    const amount = await models.Users.count();
-   return res.status(200).json({ code: 200, msg: `El total de Usuarios en es de ${amount}` });
+    const amount = await Users.count();
+    return res
+      .status(200)
+      .json({ code: 200, msg: `El total de Usuarios en es de ${amount}` });
+  } catch (error) {
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
+  }
+};
 
-    }catch (error) {
-    return res.status(error.code ? error.code : 500).json(error.message ? { code: 500, msg: error.message } : error);
-    }
-    
-  };
-
-  //**************METODO COUNT PARA LOS VIDEOS****************** */
-exports.AllPost = async(req, res) => {
+//**************METODO COUNT PARA LOS VIDEOS****************** */
+exports.AllPost = async (req, res) => {
   const { user } = req;
   const { role } = user;
-  try{
-    if(role === 1){
-      throw customError(404, 'No tienes acceso, lo sentimos');
+  try {
+    if (role === 1) {
+      throw customError(404, "No tienes acceso, lo sentimos");
     }
 
-    const postall = await models.Posts.count();
-    return res.status(200).json({ code: 200, msg: `EL total de publicaciones actualmente es de ${postall}`});
-
-  }catch (error){
-    return res.status(error.code ? error.code : 500).json(error.message ? { code: 500, msg: error.message } : error);
+    const postall = await Posts.count();
+    return res
+      .status(200)
+      .json({
+        code: 200,
+        msg: `EL total de publicaciones actualmente es de ${postall}`,
+      });
+  } catch (error) {
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
