@@ -1,9 +1,11 @@
 const { s3Service, postService, userService } = require("../services");
 
 exports.getPost = async (req, res) => {
+  const { user } = req.user;
+  const { id } = user;
   const { page, size } = req.query;
   try {
-    const posts = await postService.getPosts(page, size);
+    const posts = await postService.getPosts(page, size, id);
     return res.status(200).json({ code: 200, msg: posts });
   } catch (error) {
     return res
@@ -98,11 +100,31 @@ exports.getProfilePostById = async (req, res) => {
 exports.getProfilePostByJWT = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
-  console.log(id);
   const { page, size } = req.query;
   try {
     await userService.userExist(id);
     const posts = await postService.getAllUserPostsById(id, page, size);
+    return res.status(200).json({ code: 200, msg: posts });
+  } catch (error) {
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
+  }
+};
+
+exports.getProfilePostByJWT = async (req, res) => {
+  const { user } = req.user;
+  const { id: foraneoid } = user;
+  const { page, size } = req.query;
+  const { id: homeid } = req.params.id;
+  try {
+    await userService.userExist(id);
+    const posts = await postService.getAllUserPostsByIdfromuser(
+      foraneoid,
+      homeid,
+      page,
+      size
+    );
     return res.status(200).json({ code: 200, msg: posts });
   } catch (error) {
     return res

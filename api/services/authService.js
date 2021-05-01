@@ -36,9 +36,8 @@ exports.createToken = (externalPassword, _userDB) => {
     {
       user: {
         id: id,
-        password: userDB.password,
         email: userDB.email,
-        role: userDB.role_id,
+        Roles_id: userDB.Roles_id,
       },
     },
     secret,

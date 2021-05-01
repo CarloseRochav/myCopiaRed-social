@@ -1,4 +1,4 @@
-const { Comments } = require("../models");
+const { Comments, Users } = require("../../database/models");
 const { customError } = require("../helpers");
 
 exports.getComments = async () => {
@@ -12,8 +12,8 @@ exports.getComments = async () => {
 exports.createComment = async (_comment, id, postId) => {
   await Comments.create({
     comment: _comment,
-    User_id: id,
-    Post_id: postId,
+    Users_id: id,
+    Posts_id: postId,
   });
 };
 
@@ -23,7 +23,26 @@ exports.getCommentById = async (_id) => {
 };
 exports.commentExist = async (_id) => {
   const commentId = parseInt(_id);
-  const comment = await Comment.findOne({
+  const comment = await Comments.findOne({
+    where: { id: commentId ? commentId : -10 },
+  });
+  if (!comment) {
+    throw customError(404, "El comentario no existe.");
+  }
+  return comment;
+};
+
+exports.getCommentByPostId = async (_id) => {
+  const comments = await Comments.findAll({
+    where: { Posts_id: _id },
+    include: [{ model: Users, attributes: ["id", "name", "picture"] }],
+  });
+  return comments;
+};
+
+exports.commentExist = async (_id) => {
+  const commentId = parseInt(_id);
+  const comment = await Comments.findOne({
     where: { id: commentId ? commentId : -10 },
   });
   if (!comment) {
@@ -32,8 +51,8 @@ exports.commentExist = async (_id) => {
   return comment;
 };
 
-exports.destroyComment = async (commentId, postId, id) => {
+exports.destroyComment = async (commentId, id) => {
   await Comments.destroy({
-    where: { id: commentId, Post_id: postId, User_id: id },
+    where: { id: commentId, Users_id: id },
   });
 };

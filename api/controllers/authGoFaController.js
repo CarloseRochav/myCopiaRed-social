@@ -1,4 +1,4 @@
-const {User}=require('../models');
+const {Users}=require('../../database/models');
 const {generateNewPassword,hashPassword,randomNumber,googleToken}=require('../services/authService');
 const {authService,mailerService,userService}=require('../services')
 
@@ -27,7 +27,7 @@ exports.googleController = async (req,res,next)=>{
 
     
     //const nameRepeat= newNameTrans+user.id;
-    const userExist = await User.findOne({where:{idGoogle:user.id}});   
+    const userExist = await Users.findOne({where:{idGoogle:user.id}});   
 
     try{
     if(!userExist){
@@ -44,11 +44,11 @@ exports.googleController = async (req,res,next)=>{
                 email: user.emails[0].value,
                 phone:6633455454,
                 address: "Centro",
-                role_id:4,
+                Roles_id:4,
                 noConfirmation: randomNum
             }   
 
-            await User.create(newUser);
+            await Users.create(newUser);
             await mailerService.sendConfirmEmail(newUser.email,randomNum);//Send Email
 
             console.log("Usuario creado exitosamente",newUser);
@@ -77,8 +77,15 @@ exports.googleController = async (req,res,next)=>{
         const user = await userService.userIsValid(userExist.email);
         const token = await authService.googleToken(user);       
         
-        //Retorna el token
-        return res.json({token:token});
+        //Retorna el token        
+
+        res.json({
+            code:201,
+            msg:"Actualizado y validado",
+            token:token
+        })
+
+       
      }   
 
      //return next();
@@ -90,6 +97,10 @@ catch(err){
 }
 
 //CONTROLADOR PARA FACEBOOK
+exports.facebookController=async(req,res)=>{
+   
+
+}
 
 
 exports.verifyUser= async (req,res)=>{
@@ -98,25 +109,34 @@ exports.verifyUser= async (req,res)=>{
 
     try{
         
-        await userService.updateUserByNumber(code)
-        await User.update({
+        await userService.updateUserByNumber(code)        
+        await Users.update({
             birth:birth,
             phone:phone,
             address:address
-        },
-        {where:{noConfirmation:code}}
-        )
-            
+        },{
+            where:{noConfirmation:code}
+        })
+        const userExist = await Users.findOne({where:{noConfirmation:code}},);
+        
+        const user = await userService.userIsValid(userExist.email);
+        //console.log("USUARIO PAPS ",user);
+        const token = await authService.googleToken(user);       
+        
+        //Retorna el token        
 
         res.json({
             code:201,
-            msg:"Actualizado y validado"
-        })
+            msg:"Actualizado y validado",
+            token:token
+        })        
 
     }catch(err){
+        
+        console.log(`ERROR : ${err}`)
         res.json({
             code:501,
-            error: err,
+            error: err.message,
         })
     }
 

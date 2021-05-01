@@ -3,7 +3,7 @@ const router = express.Router();
 const { postController } = require("../controllers");
 const { authMiddleware, uploadMiddleware } = require("../middlewares");
 
-router.get("/post", postController.getPost);
+router.get("/post", authMiddleware, postController.getPost);
 
 router.post(
   "/post",
@@ -23,5 +23,8 @@ router.get(
 router.put("/post/:id", authMiddleware, postController.updatePost);
 
 router.delete("/post/:id", authMiddleware, postController.deletePost);
+
+//usertouser
+router.get("/userposts/:id", authMiddleware, postController.getProfilePostById);
 
 module.exports = router;

@@ -1,8 +1,9 @@
-const { User, Interface } = require("../models");
+const { Users, Interfaces } = require("../../database/models");
+const { s3Service } = require("../services");
 
 exports.getInterface = async (req, res) => {
   try {
-    const interfaces = await Interface.findAll();
+    const interfaces = await Interfaces.findAll();
     return res.status(200).json({ code: 200, msg: interfaces });
   } catch (error) {
     return res
@@ -18,14 +19,14 @@ exports.createInterface = async (req, res) => {
   const { id } = user;
   const newInterface = req.body;
   try {
-    const userExist = await User.findByPk(id);
+    const userExist = await Users.findByPk(id);
     if (!userExist) {
       return res
         .status(404)
         .json({ code: 404, message: "El usuario no existe" });
     }
 
-    await Interface.create({
+    await Interfaces.create({
       Logo: newInterface.logo,
       PrimaryColor: newInterface.primaryColor,
       SecondaryColor: newInterface.secondaryColor,
@@ -45,25 +46,19 @@ exports.updateInterface = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
   const newInterface = req.body;
+
+  const myFile = req.file.originalname.split(".");
+  const fileType = myFile[myFile.length - 1];
+  const buffer = req.file.buffer;
+
   try {
-    const userExist = await User.findByPk(id);
+    const userExist = await Users.findByPk(id);
     if (!userExist) {
       return res
         .status(404)
         .json({ code: 404, message: "El usuario no existe" });
     }
-    await Interface.update(
-      {
-        Logo: newInterface.logo,
-        PrimaryColor: newInterface.primaryColor,
-        SecondaryColor: newInterface.secondaryColor,
-      },
-      {
-        where: {
-          id: 1,
-        },
-      }
-    );
+    await s3Service.uploadLogo(newInterface, fileType, buffer);
     res
       .status(200)
       .json({ code: 200, message: "La configuracion ha sido actualizada" });
