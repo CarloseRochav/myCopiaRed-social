@@ -1,7 +1,7 @@
 const passport = require('passport');
-const fbStrategy = passport.authenticate('facebook');
+const fbStrategy = passport.authenticate('facebook',{scope:['email','profile']});
 const express = require('express');
-const { AppStream } = require('aws-sdk');
+//const { AppStream } = require('aws-sdk');
 const router = express.Router();
 
 

@@ -11,8 +11,8 @@ const{GOOGLE_OAUTH_ID,GOOGLE_OAUTH_KEY}=require('../../config/enviromentVars');
 passport.use(new fbStrategy({
     clientID:process.env.FB_CLIENTID,
     clientSecret:process.env.FB_APP_SECRECT,
-    callbackURL:"http://localhost:8080/fb/callback",
-    profileFields: ["email", "name"]
+    callbackURL:"http://localhost:8080/fb/callback"
+    //profileFields: ["email", "name"]
         
 },async(accessToken,refreshToken,profile,done)=>{
 
