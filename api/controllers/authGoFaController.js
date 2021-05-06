@@ -1,8 +1,75 @@
 const {Users}=require('../../database/models');
 const {generateNewPassword,hashPassword,randomNumber,googleToken}=require('../services/authService');
-const {authService,mailerService,userService}=require('../services')
+const {authService,mailerService,userService}=require('../services');
+
+//FB CONTROLLER
+//CONTROLADOR PARA FACEBOOK
+exports.facebookController=async(req,res,next)=>{
+    const user = req.user   
+
+    console.log(`idFB ${user.id}`);
+    console.log(`displayName ${user.displayName}`);    
+    console.log(`picture ${user.photos[0].value}`); 
+    console.log(`email ${user.emails[0].value}`); 
+
+    const userExist = await Users.findOne({where:{idFacebook:user.id}})
+
+    //Componentes para creacion
+    const nameTranformacion = user.displayName.replace(/[\s+.]/gi, '');//Reemplaza puntos y espacios, suprime
+    const newNameTrans=nameTranformacion.normalize("NFD").replace(/[\u0300-\u036f]/g, "");//NFD ; es la forma de normalizacion Unicode
+    const randomPass =generateNewPassword();
+    const hashPass=hashPassword(randomPass);
+    const randomNum = randomNumber();
+
+    if(!userExist){
+        const newUser =//Objeto del usuario
+        {
+            idFacebook:user.id,
+            name:newNameTrans,
+            password: hashPass,
+            picture: user.photos[0].value,
+            birth: "01/01/2000",
+            email: user.emails[0].value,
+            phone:6633455454,
+            address: "Centro",
+            Roles_id:4,
+            noConfirmation: randomNum
+        }   
+
+        await Users.create(newUser);
+        await mailerService.sendConfirmEmail(newUser.email,randomNum);//Send Email
+
+        console.log("Usuario creado exitosamente",newUser);
+        //Retorna Json
+        return res.json({
+            code:201,
+            msg:{
+                Usuario:"Usuario Credo Exitosamente",
+                Aviso:"Por favor ingrese el codigo que se la enviado",
+                Update:"Actualice sus datos"
+            }
+        });
+        
+
+    }
+    if(userExist){
+        console.log("Este usuario ya esta registrado", userExist);  
+        const user = await userService.userIsValid(userExist.email);
+        const token = await authService.oauthToken(user);       
+        
+        //Retorna el token        
+
+        res.json({
+            code:201,
+            msg:"Actualizado y validado",
+            token:token
+        })
+    }
+
+}
 
 
+//GOOGLE CONTROLLER
 exports.googleController = async (req,res,next)=>{
 
     const user=req.user;
@@ -75,7 +142,7 @@ exports.googleController = async (req,res,next)=>{
       
         console.log("Este usuario ya esta registrado", userExist);  
         const user = await userService.userIsValid(userExist.email);
-        const token = await authService.googleToken(user);       
+        const token = await authService.oauthToken(user);       
         
         //Retorna el token        
 
@@ -96,11 +163,6 @@ catch(err){
     }
 }
 
-//CONTROLADOR PARA FACEBOOK
-exports.facebookController=async(req,res)=>{
-   
-
-}
 
 
 exports.verifyUser= async (req,res)=>{
@@ -121,7 +183,7 @@ exports.verifyUser= async (req,res)=>{
         
         const user = await userService.userIsValid(userExist.email);
         //console.log("USUARIO PAPS ",user);
-        const token = await authService.googleToken(user);       
+        const token = await authService.oauthToken(user);       
         
         //Retorna el token        
 

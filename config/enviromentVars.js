@@ -14,5 +14,7 @@ module.exports = {
   NODE_MAILER_EMAIL: process.env.NODE_MAILER_EMAIL,
   NODE_MAILER_PASSWORD: process.env.NODE_MAILER_PASSWORD,
   GOOGLE_OAUTH_ID: process.env.GOOGLE_OAUTH_ID,
-  GOOGLE_OAUTH_KEY: process.env.GOOGLE_OAUTH_KEY
+  GOOGLE_OAUTH_KEY: process.env.GOOGLE_OAUTH_KEY,
+  FB_CLIENT:process.env.FB_CLIENT,
+  FB_SECRET:process.env.FB_SECRET
 };

@@ -3,7 +3,7 @@ const { secret, expires, rounds } = require("../../config/auth");
 const { random, customError } = require("../helpers");
 const randomstring = require("randomstring");
 const jwt = require("jsonwebtoken");
-const passport = require("passport");
+
 
 exports.hashPassword = (password) => {
   const hashPassword = bcrypt.hashSync(password, +rounds);
@@ -36,8 +36,9 @@ exports.createToken = (externalPassword, _userDB) => {
     {
       user: {
         id: id,
+        password: userDB.password,
         email: userDB.email,
-        Roles_id: userDB.Roles_id,
+        role: userDB.role_id,
       },
     },
     secret,
@@ -48,8 +49,8 @@ exports.createToken = (externalPassword, _userDB) => {
   return token;
 };
 
-exports.googleToken=(usuario)=>{ //Generacion de token para usuarios de google
-  const {id,names,email,role,password} = usuario;
+exports.oauthToken=(usuario)=>{ //Generacion de token para usuarios de google
+  const {id,email,role,password} = usuario;
 
   console.log("HOLA NENES");
 

@@ -55,7 +55,6 @@ router.get("/auth/failure",(req,res)=>{
       req.user? next():res.sendStatus(401);
   }
 
-router.post("/google/verify",googleFacebookController.verifyUser);
 
 //router.post("/auth/facebook",passport.authenticate("facebookToken",{session:false}));
 
