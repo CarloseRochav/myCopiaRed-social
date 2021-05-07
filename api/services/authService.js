@@ -4,6 +4,7 @@ const { random, customError } = require("../helpers");
 const randomstring = require("randomstring");
 const jwt = require("jsonwebtoken");
 
+
 exports.hashPassword = (password) => {
   const hashPassword = bcrypt.hashSync(password, +rounds);
   return hashPassword;
@@ -17,7 +18,7 @@ exports.randomNumber = () => {
 exports.verifyPasswordLength = (_password) => {
   const password = _password;
   if (password.length <= 6) {
-    throw customError(500, "La conseña es muy corta.");
+    throw customError(500, "La contraseña es muy corta.");
   }
   return password;
 };
@@ -31,12 +32,13 @@ exports.createToken = (externalPassword, _userDB) => {
     throw customError(500, "La conseña es incorrecta.");
   }
 
-  const token = jwt.sign(
+  const token = jwt.sign(//Generacion de token
     {
       user: {
         id: id,
+        password: userDB.password,
         email: userDB.email,
-        Roles_id: userDB.Roles_id,
+        role: userDB.role_id,
       },
     },
     secret,
@@ -47,9 +49,31 @@ exports.createToken = (externalPassword, _userDB) => {
   return token;
 };
 
+exports.oauthToken=(usuario)=>{ //Generacion de token para usuarios de google
+  const {id,email,role,password} = usuario;
+
+  console.log("HOLA NENES");
+
+  const token=jwt.sign( //Generacion de token google
+    {
+      user:{
+        id:id, 
+        password:password,
+        email:email,
+        role:role
+      },
+    },
+    secret,
+    {
+      expiresIn:expires
+    }
+  );
+  return token;
+};
+
 exports.comparePasswords = (password, externalPassword) => {
   if (bcrypt.compareSync(password, externalPassword)) {
-    throw customError(404, "La conseña no coincide.");
+    throw customError(404, "La contraseña no coincide.");
   }
   return true;
 };
