@@ -1,4 +1,4 @@
-const { categoryService, userService } = require("../services");
+const { categoryService, userService, s3Service } = require("../services");
 
 exports.getCategories = async (req, res) => {
   try {
@@ -14,10 +14,19 @@ exports.getCategories = async (req, res) => {
 exports.createCategories = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
+
+  const myFile = req.file.originalname.split(".");
+  const fileType = myFile[myFile.length - 1];
+  const buffer = req.file.buffer;
+
   try {
     await userService.userExist(id);
-    await categoryService.createCategory(req.body.name);
-
+    await s3Service.uploadCategorieImage(
+      req.body.name,
+      req.body.description,
+      fileType,
+      buffer
+    );
     return res
       .status(200)
       .json({ code: 200, msg: "Categoria creada exitosamente" });
@@ -36,7 +45,7 @@ exports.deleteCategory = async (req, res) => {
   try {
     await userService.userExist(id);
     await categoryService.categoryExist(categoryId);
-    await categoryService.destroyCategory(categoryId);
+    await categoryService.destroyCategories(categoryId);
     return res
       .status(200)
       .json({ code: 200, msg: "Categoria borrada exitosamente" });

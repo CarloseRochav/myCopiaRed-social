@@ -6,8 +6,6 @@ const { authMiddleware, uploadMiddleware } = require("../middlewares");
 
 router.get("/usuarios", userController.getUsers);
 
-router.get("/usuarios/:id", userController.getUserById);
-
 router.delete("/usuarios/:id", userController.deleteUser);
 
 //  Perfil
@@ -29,6 +27,17 @@ router.post(
   userController.updateImageBackgroundProfileUser
 );
 
+//Rutas de GALERIA
+router.post("/getobject",authMiddleware,userController.getAnObject);//Obetener un objeto 
+//Ruta de prueba con s3
+router.get("/getAll",authMiddleware,userController.getAllObjects);//Obtener todos los objetos
+//Eliminar un objeto
+router.post("/deleteObject",authMiddleware,userController.deleteObject);
+
+//Interaccion con otros usuarios.
 router.post("/blacklist/:id", authMiddleware, userController.Blacklist);
+router.get("/usuario/:id", authMiddleware, userController.getAUserByJWT);
+
+
 
 module.exports = router;

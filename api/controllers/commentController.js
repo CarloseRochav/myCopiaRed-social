@@ -1,4 +1,5 @@
 const { postService, userService, commentService } = require("../services");
+const { Comments } = require("../../database/models");
 
 exports.getComments = async (req, res) => {
   try {
@@ -19,7 +20,8 @@ exports.createComments = async (req, res) => {
   try {
     await userService.userExist(id);
     await postService.postExist(postId);
-    await commentService.createComment(req.body.comment);
+    await commentService.createComment(req.body.comment, id, postId);
+    await postService.addComment(postId);
 
     return res
       .status(200)
@@ -34,8 +36,20 @@ exports.createComments = async (req, res) => {
 exports.getCommentsById = async (req, res) => {
   const commentId = req.params.id;
   try {
-    const comment = commentService.getCommentById(commentId);
+    const comment = await commentService.getCommentById(commentId);
     return res.status(200).json({ code: 200, msg: comment });
+  } catch (error) {
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
+  }
+};
+
+exports.getCommentsByPostId = async (req, res) => {
+  const postId = req.params.id;
+  try {
+    const comments = await commentService.getCommentByPostId(postId);
+    return res.status(200).json({ code: 200, msg: comments });
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
@@ -48,15 +62,14 @@ exports.updateComments = async (req, res) => {
   const { id } = user;
   const postId = req.params.idpost;
   const commentId = req.params.idcomment;
-  const newComment = req.body;
 
   try {
     await userService.userExist(id);
     await postService.postExist(postId);
     await commentService.commentExist(commentId);
     await Comments.update(
-      { comment: newComment.comment },
-      { where: { id: commentId, Post_id: postId, User_id: id } }
+      { comment: req.body.comment },
+      { where: { id: commentId, Posts_id: postId, Users_id: id } }
     );
 
     return res.status(200).json({ code: 200, msg: "Comentario Actualizado" });
@@ -69,14 +82,12 @@ exports.updateComments = async (req, res) => {
 exports.deleteComments = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
-  const postId = req.params.idpost;
-  const commentId = req.params.idcomment;
-
+  const commentId = req.params.id;
   try {
     await userService.userExist(id);
-    await postService.postExist(postId);
-    await commentService.commentExist(commentId);
-    await commentService.destroyComment(commentId, postId, id);
+    const comment = await commentService.commentExist(commentId);
+    await commentService.destroyComment(commentId, id);
+    await postService.removeComment(comment.dataValues.Posts_id);
     return res.status(200).json({ code: 200, msg: "Comentario eliminado" });
   } catch (error) {
     return res

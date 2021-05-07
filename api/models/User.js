@@ -4,6 +4,17 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
     {
+      idGoogle:{
+        type:DataTypes.STRING,
+        allowNull:true,
+        unique:true
+
+      },
+      idFacebook:{
+        type:DataTypes.STRING,
+        allowNull:true,
+        unique:true
+      },
       name: {
         //Name
         type: DataTypes.STRING,
@@ -33,6 +44,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+       //Picture
       picture: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -43,8 +55,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       description: {
         type: DataTypes.STRING,
-      },
-      //Picture
+      },     
       birth: {
         type: DataTypes.DATE,
         allowNull: true,
@@ -115,7 +126,15 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function (models) {
     User.hasMany(models.Post, {
-      foreignKey: "User_id",
+        foreignKey: "User_id",
+      });
+
+    };
+
+  //Segunda asociacion
+  User.associate = function(models){
+    User.hasOne(models.Gallery,{
+      foreignKey:"User_id",
     });
     User.hasMany(models.Comments, {
       foreignKey: "User_id",

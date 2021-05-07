@@ -1,22 +1,20 @@
 "use strict";
+
 const fs = require("fs");
 const path = require("path");
 const Sequelize = require("sequelize");
 const basename = path.basename(__filename);
-const config = require("../../config/dbConfig/development");
+const { development: config } = require("../../config/dbConfig/config.js");
 const db = {};
 
-// Creamos nuestra conexión
-const sequelize = new Sequelize(config.URL, {
-  dialect: "postgres",
-  protocol: "postgres",
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
-  },
-});
+let sequelize;
+sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  config
+);
+
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (

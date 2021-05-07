@@ -1,4 +1,7 @@
 const { mailerService, authService, userService } = require("../services");
+const passport=require('passport');
+
+const { cu } = require("../helpers");
 
 exports.signUp = async (req, res) => {
   const password = req.body.password;
@@ -24,7 +27,9 @@ exports.signIn = async (req, res) => {
   try {
     const user = await userService.userIsValid(email);
     const token = authService.createToken(password, user);
-    return res.status(200).json({ code: 200, msg: token });
+    return res
+      .status(200)
+      .json({ code: 200, msg: token, rolID: user.Roles_id });
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
@@ -34,14 +39,10 @@ exports.signIn = async (req, res) => {
 
 exports.changePassword = async (req, res) => {
   const { user } = req.user;
-  const { email, password } = user;
+  const { email } = user;
   const newPassword = req.body.password;
   try {
-    const userDb = await userService.userExistWithEmailPassword(
-      email,
-      password
-    );
-    authService.comparePasswords(password, userDb.password);
+    await userService.userIsValid(email);
     const newHashPassword = authService.hashPassword(newPassword);
     await userService.updateUserPassword(newHashPassword, email);
     await mailerService.sendChangePassword(email, newPassword);
@@ -88,3 +89,29 @@ exports.verifyUser = async (req, res) => {
       .json(error.message ? { code: 500, msg: error.message } : error);
   }
 };
+
+exports.verifyUserExt = async (req,res)=>{//Verificar usuarios de google/facebook
+  const {code,birth,phone,role,address} = req.body;//Datos para actualizar y verificar
+  const {User}=require('../models');//Modelo del usuario
+
+  try{//Intenta acualizar los datos de el usuario recien registrado
+     User.update({
+       birth:birth,
+       phone:phone,
+       role:role,
+       address:address      
+    },
+    {where:{
+      noConfirmation:code,isActiva:false}//Donde cumpla los dos campos
+    });
+
+    await userService.updateUserByNumber(code);//Activa la cuenta a isActivate = true;    
+  
+  }catch{
+    return res
+      .status(500)
+      .json({msg:"Error al ingresar los datos"});
+  }  
+  
+}
+

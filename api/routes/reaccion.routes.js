@@ -6,13 +6,31 @@ const { authMiddleware } = require("../middlewares");
 router.get("/reaccion", authMiddleware, reaccionsController.getReaccions);
 
 router.post(
-  "/reaccions/:idpost",
+  "/reaccion/:id",
+  authMiddleware,
+  reaccionsController.createReaccions
+);
+
+router.get(
+  "/reaccion/:id",
+  authMiddleware,
+  reaccionsController.getReaccionsByPost
+);
+
+router.get(
+  "/reaccionsis",
+  authMiddleware,
+  reaccionsController.getReaccionsByUser
+);
+
+router.post(
+  "/reaccion/:id",
   authMiddleware,
   reaccionsController.createReaccions
 );
 
 router.delete(
-  "/reaccion/:idreaccions",
+  "/reaccion/:id",
   authMiddleware,
   reaccionsController.deleteReaccions
 );

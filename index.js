@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { sequelize } = require("./api/models");
+const { sequelize } = require("./database/models/index");
 const {
   userRoutes,
   authRoutes,
@@ -9,20 +9,38 @@ const {
   categoryRoutes,
   commentRoutes,
   reaccionRoutes,
+  googleRoutes,
+  fbRoutes
 } = require("./api/routes"); //Import Routes
 const { transporter } = require("./config/nodeMailerConfig/development");
 
 // Crear el servidor
 const app = express();
 
-//Uso de bodyP
+//Passport y google
+//require('./api/middlewares/oauthPassportMiddleware');
+const passport = require('passport');
+const session= require('express-session');
+app.use(session({secret:"cats"}));
+app.use(passport.initialize());
+app.use(passport.session());
+// <- Configuraciones necesarias para que confusione google oauth ; Initialize -Index principal
+
+
+//Uso de bodyParser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+
+// const session = require('express-session');
+// app.use(passport.initialize());
+// app.use(passport.session());
+// app.use(session({secret:"cats"}));
 
 // habilitar cors
 app.use(cors());
 
-// puerto de la app
+// puerto de la apps
 const port = process.env.PORT || 8080;
 
 // Importar rutas
@@ -33,6 +51,8 @@ app.use(commentRoutes);
 app.use(reaccionRoutes);
 app.use(interfacesRoutes);
 app.use(categoryRoutes);
+app.use(googleRoutes);
+app.use(fbRoutes);
 
 //Arrancamos APP
 app.listen(port, "0.0.0.0", () => {
@@ -49,11 +69,17 @@ app.listen(port, "0.0.0.0", () => {
     });
   // Contectandose a la base de datos
   sequelize
-    .sync({ force: false }) //Sincroniza el modelo con la base de datos false || true
+    .authenticate()
     .then(() => {
-      console.log("Conectado a la base de datos");
+      console.log("Conectado a la base de datos.");
     })
-    .catch((error) => {
-      console.log("No se ha conectado a la base de datos" + error);
+    .catch((err) => {
+      console.error("No es posible conectarse a la base de datos:", err);
     });
 });
+
+
+// Role.create({
+//   name:"Comun",
+//   description:"Usuario Normal"
+// });
