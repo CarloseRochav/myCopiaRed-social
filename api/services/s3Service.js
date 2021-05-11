@@ -4,6 +4,7 @@ const {
   Posts,
   Categories,
   Interfaces,
+  Galleries,
 } = require("../../database/models");
 const { v4: uuidv4 } = require("uuid");
 const awsConfig = require("../../config/awsConfig/development");
@@ -33,18 +34,14 @@ exports.updateImageProfile = async (fileType, buffer, _id) => {
         where: {
           id: _id,
         },
-      }     
-    );
-    
-    await Gallery.create(
-      {
-        pathResource:Location,
-        User_id:_id,
-        keyResource:params.Key
       }
-    )
-    
-        
+    );
+
+    await Galleries.create({
+      pathResource: Location,
+      User_id: _id,
+      keyResource: params.Key,
+    });
   });
 };
 
@@ -78,12 +75,10 @@ exports.updateImageBackgroundProfile = async (fileType, buffer, _id) => {
       longitude: req.body.longitude,
       User_id: id,
     });
-    await Gallery.create(
-      {
-        mediaResource:Location,
-        User_id:id,
-      }
-    )
+    await Galleries.create({
+      mediaResource: Location,
+      User_id: id,
+    });
   });
 };
 
@@ -109,12 +104,10 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
       }
     );
 
-    await Gallery.create(
-      {
-        mediaResource:Location,
-        User_id:_id
-      }
-    )
+    await Galleries.create({
+      mediaResource: Location,
+      User_id: _id,
+    });
 
     await Posts.create({
       title: body.title,
@@ -132,18 +125,16 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
 };
 
 //Obetener listas de objetos
-exports.getObject=async(key)=>{
-  const params={
-    Bucket:awsConfig.bucket,
-    Key:key
-  }
+exports.getObject = async (key) => {
+  const params = {
+    Bucket: awsConfig.bucket,
+    Key: key,
+  };
 
-  s3.getObject(params,(err,data)=>{
-    
-      if(err){
-        console.log("Hay un error : "+err);       
-    }
-    else{
+  s3.getObject(params, (err, data) => {
+    if (err) {
+      console.log("Hay un error : " + err);
+    } else {
       // fs.writeFile("Imagen_desde_s3.mp4",data.Body,'binary',(err)=>{
       //   if(err) throw err
       //   console.log("imagen descargada");
@@ -151,45 +142,40 @@ exports.getObject=async(key)=>{
       console.log(data.Body);
     }
   });
-}
+};
 
 //Obetener todos los objetos del bucket
-exports.getAllObjects=async()=>{
+exports.getAllObjects = async () => {
+  let params = {
+    Bucket: awsConfig.bucket,
+  };
 
-  let params ={
-    Bucket:awsConfig.bucket
-  }
-
-  s3.listObjectsV2(params,(err,data)=>{
-    if(err){
+  s3.listObjectsV2(params, (err, data) => {
+    if (err) {
       console.log("Tenemos un  error ");
-      throw err
-    }
-    else{
+      throw err;
+    } else {
       console.log(data);
     }
-  })
-}
+  });
+};
 
 //Eliminar un objeto
-exports.deleteImageOrVideo= async(key)=>{
-  const params={
-    Bucket:awsConfig.bucket,
-    Key:key
-  }
+exports.deleteImageOrVideo = async (key) => {
+  const params = {
+    Bucket: awsConfig.bucket,
+    Key: key,
+  };
 
-  s3.deleteObject(params,(err,data)=>{
-
-    if(err){
+  s3.deleteObject(params, (err, data) => {
+    if (err) {
       console.log(" Error al procesar : ");
       throw err;
-    }
-    else{
+    } else {
       console.log(`El ${data} se ha eliminado satisfacctoriamente`);
     }
-  })
-  
-}
+  });
+};
 exports.uploadCategorieImage = async (name, description, fileType, buffer) => {
   const params = {
     Bucket: awsConfig.bucket,

@@ -10,7 +10,8 @@ const {
   commentRoutes,
   reaccionRoutes,
   googleRoutes,
-  fbRoutes
+  fbRoutes,
+  followerRoutes,
 } = require("./api/routes"); //Import Routes
 const { transporter } = require("./config/nodeMailerConfig/development");
 
@@ -19,18 +20,16 @@ const app = express();
 
 //Passport y google
 //require('./api/middlewares/oauthPassportMiddleware');
-const passport = require('passport');
-const session= require('express-session');
-app.use(session({secret:"cats"}));
+const passport = require("passport");
+const session = require("express-session");
+app.use(session({ secret: "cats" }));
 app.use(passport.initialize());
 app.use(passport.session());
 // <- Configuraciones necesarias para que confusione google oauth ; Initialize -Index principal
 
-
 //Uso de bodyParser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
 
 // const session = require('express-session');
 // app.use(passport.initialize());
@@ -53,6 +52,7 @@ app.use(interfacesRoutes);
 app.use(categoryRoutes);
 app.use(googleRoutes);
 app.use(fbRoutes);
+app.use(followerRoutes);
 
 //Arrancamos APP
 app.listen(port, "0.0.0.0", () => {
@@ -77,7 +77,6 @@ app.listen(port, "0.0.0.0", () => {
       console.error("No es posible conectarse a la base de datos:", err);
     });
 });
-
 
 // Role.create({
 //   name:"Comun",

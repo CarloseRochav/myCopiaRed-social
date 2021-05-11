@@ -56,3 +56,9 @@ exports.destroyComment = async (commentId, id) => {
     where: { id: commentId, Users_id: id },
   });
 };
+
+exports.destroyAllComments = async (postId) => {
+  await Comments.destroy({
+    where: { Posts_id: postId },
+  });
+};

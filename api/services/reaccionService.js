@@ -64,3 +64,9 @@ exports.destroyReaction = async (postId, userId) => {
     where: { Posts_id: postId, Users_id: userId },
   });
 };
+
+exports.destroyAllReactions = async (postId) => {
+  await Reactions.destroy({
+    where: { Posts_id: postId },
+  });
+};

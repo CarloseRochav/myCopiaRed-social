@@ -1,8 +1,3 @@
-const { User,Gallery } = require("../../database/models");
-const { imageService } = require("../services");
-const { formatError, formatMessage } = require("../helpers");
-
-
 const { s3Service, userService, blacklistService } = require("../services");
 
 //#region Basic User Methods
@@ -133,99 +128,7 @@ exports.Blacklist = async (req, res) => {
       .status(error.code ? error.code : 500)
       .json(error.message ? { code: 500, msg: error.message } : error);
   }
-}
-
-//CRUD S3 GALLERY
-
-exports.getAnObject=async (req,res)=>{
-    const{user}=req.user;
-    const {id}=user;
-    //1ra
-    let key = req.body.key;
-    console.log(`Tipo de dato : ${Object.keys(req.body)}`); 
-
-    const userExist=await User.findByPk(id);
-    if (!userExist)
-      throw res.status(404).json({ code: 404, message: "El usuario no existe" });
-
-    
-    try{
-      const object = await Gallery.findOne({where:{keyResource:key}});
-
-      if(!object) throw res.status(404).json({code:404, message:"Archivo no existe"});
-      res.status(200).json({Ruta:object.pathResource,
-                            Nombre:object.keyResource,
-                            ByUser:object.User_id});
-
-                             imageService.getObject(key);
-
-    }
-    catch(err){
-      const message = formatError(err,404,"Error al ingresar datos");
-      res.status(404).json(message);
-    }
-
-  
-
-    
-   
-}
-
-exports.getAllObjects=async (req,res)=>{//Obetener todos los objetos
-    const{user}=req.user;
-    const {id}=user;
-    
-
-    //const key = req.body.key;
-
-    const userExist=await User.findByPk(id);
-    if (!userExist)
-      throw res.status(404).json({ code: 404, message: "El usuario no existe" });    
-
-      const objects = await Gallery.findAll();
-
-         if(!objects) throw res.status(404).json({code:404, message:"Archivo no existe"});        
-         res.status(200).json(objects);
-
-        imageService.getAllObjects();
-}
-
-
-exports.deleteObject=async (req,res)=>{
-    let key = req.body.key;
-    const{user}=req.user;
-    const {id}=user;
-    const userExist=await User.findByPk(id);
-    
-    if (!userExist)
-      throw res.status(404).json({ code: 404, message: "El usuario no existe" });
-    
-      
-    try{
-      //Eliminar registro de la base de datos que cumpla con las siguientes condiciones
-      await Gallery.destroy(
-        {where: {User_id:id,keyResource:key}}         
-      )
-
-      imageService.deleteImageOrVideo(key);
-      
-      //imageService.deleteImageOrVideo(key)
-      res.status(200).json({message: "Eliminacion de objeto"});
-    }
-    catch (err){
-      const message=formatError(err,400,"Error No coincide con la condicion");
-      console.log(message);
-      
-    }
-    
-
-    
-
-
-
-  
-}
-//#endregion
+};
 
 exports.getAUserByJWT = async (req, res) => {
   const { user } = req.user;
@@ -234,6 +137,63 @@ exports.getAUserByJWT = async (req, res) => {
   try {
     const user = await userService.userData(id, idUserCasa);
     return res.status(200).json({ code: 200, msg: user });
+  } catch (error) {
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
+  }
+};
+
+//Metodo Count
+exports.AllUsers = async (req, res) => {
+  const { user } = req;
+  const { role } = user;
+  const { roles, blocked } = req.query;
+  try {
+    if (role !== 1) {
+      throw customError(404, "No estas Autorizado");
+    }
+    if (blocked === null || blocked === "all") {
+      const banner = await models.Users.count({
+        where: {
+          Roles_id: roles,
+        },
+      });
+      return res
+        .status(200)
+        .json({
+          code: 200,
+          msg: `El total de Usuarios  banneados es de : ${banner}`,
+        });
+    }
+    const amount = await models.Users.count({
+      where: {
+        Roles_id: roles,
+        isBlocked: blocked,
+      },
+    });
+    return res
+      .status(200)
+      .json({ code: 200, msg: `El total de Usuarios  es de  ${amount}` });
+  } catch (error) {
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
+  }
+};
+
+exports.AllPost = async (req, res) => {
+  const { user } = req;
+  const { role } = user;
+  try {
+    if (role !== 1) {
+      throw customError(404, "No tienes acceso, lo sentimos");
+    }
+    const postall = await Posts.count();
+    return res.status(200).json({
+      code: 200,
+      msg: `EL total de publicaciones actualmente es de ${postall}`,
+    });
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
