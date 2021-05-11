@@ -6,6 +6,8 @@ const {
   reaccionService,
 } = require("../services");
 
+const { UsersViews } = require("../../database/models");
+
 exports.getPost = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
@@ -59,6 +61,9 @@ exports.deletePost = async (req, res) => {
   try {
     await userService.userExist(id);
     await postService.postExist(postId);
+    await UsersViews.destroy({
+      where: { Posts_id: postId },
+    });
     await reaccionService.destroyAllReactions(postId);
     await commentService.destroyAllComments(postId);
     await postService.deletePost(id, postId);

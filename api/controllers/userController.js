@@ -1,5 +1,6 @@
 const { s3Service, userService, blacklistService } = require("../services");
-
+const { Users, Posts } = require("../../database/models");
+const { customError } = require("../helpers");
 //#region Basic User Methods
 exports.getUsers = async (req, res) => {
   try {
@@ -154,19 +155,17 @@ exports.AllUsers = async (req, res) => {
       throw customError(404, "No estas Autorizado");
     }
     if (blocked === null || blocked === "all") {
-      const banner = await models.Users.count({
+      const banner = await Users.count({
         where: {
           Roles_id: roles,
         },
       });
-      return res
-        .status(200)
-        .json({
-          code: 200,
-          msg: `El total de Usuarios  banneados es de : ${banner}`,
-        });
+      return res.status(200).json({
+        code: 200,
+        msg: `El total de Usuarios  banneados es de : ${banner}`,
+      });
     }
-    const amount = await models.Users.count({
+    const amount = await Users.count({
       where: {
         Roles_id: roles,
         isBlocked: blocked,
