@@ -12,6 +12,7 @@ const {
   googleRoutes,
   fbRoutes,
   followerRoutes,
+  viewRoutes,
 } = require("./api/routes"); //Import Routes
 const { transporter } = require("./config/nodeMailerConfig/development");
 
@@ -53,6 +54,7 @@ app.use(categoryRoutes);
 app.use(googleRoutes);
 app.use(fbRoutes);
 app.use(followerRoutes);
+app.use(viewRoutes);
 
 //Arrancamos APP
 app.listen(port, "0.0.0.0", () => {

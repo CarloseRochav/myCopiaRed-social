@@ -9,4 +9,5 @@ module.exports = {
   categoryController: require("./categoryController"),
   interfaceController: require("./interfaceController"),
   googleFacebookController: require("./authGoFaController"),
+  viewRoutes: require("./viewsController"),
 };

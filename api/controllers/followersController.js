@@ -5,7 +5,7 @@ exports.postFollow = async (req, res) => {
   const { id } = user;
   const idFollowing = req.params.id;
   try {
-    followService.followToUser(id, idFollowing);
+    await followService.followToUser(id, idFollowing);
     return res
       .status(200)
       .json({ code: 200, msg: "Gracias por seguir a este usuario" });
@@ -21,7 +21,7 @@ exports.deleteFollow = async (req, res) => {
   const { id } = user;
   const idFollowing = req.params.id;
   try {
-    followService.deleteFollowToUser(id, idFollowing);
+    await followService.deleteFollowToUser(id, idFollowing);
     return res
       .status(200)
       .json({ code: 200, msg: "Has dejado de seguir a este usuario" });
@@ -37,7 +37,7 @@ exports.totalCountFollowers = async (req, res) => {
   const { id } = user;
   const idFollowing = req.params.id;
   try {
-    const totalCount = followService.totalCountFollowers(idFollowing);
+    const totalCount = await followService.totalCountFollowers(idFollowing);
     return res.status(200).json({ code: 200, msg: totalCount });
   } catch (error) {
     return res
@@ -47,11 +47,9 @@ exports.totalCountFollowers = async (req, res) => {
 };
 
 exports.totalFollowers = async (req, res) => {
-  const { user } = req.user;
-  const { id } = user;
   const idFollowing = req.params.id;
   try {
-    const totalFollowers = followService.allFollowers(idFollowing);
+    const totalFollowers = await followService.allFollowers(idFollowing);
     return res.status(200).json({ code: 200, msg: totalFollowers });
   } catch (error) {
     return res
