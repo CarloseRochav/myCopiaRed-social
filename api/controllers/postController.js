@@ -1,4 +1,12 @@
-const { s3Service, postService, userService } = require("../services");
+const {
+  s3Service,
+  postService,
+  userService,
+  commentService,
+  reaccionService,
+} = require("../services");
+
+const { UsersViews } = require("../../database/models");
 
 exports.getPost = async (req, res) => {
   const { user } = req.user;
@@ -53,6 +61,11 @@ exports.deletePost = async (req, res) => {
   try {
     await userService.userExist(id);
     await postService.postExist(postId);
+    await UsersViews.destroy({
+      where: { Posts_id: postId },
+    });
+    await reaccionService.destroyAllReactions(postId);
+    await commentService.destroyAllComments(postId);
     await postService.deletePost(id, postId);
     return res
       .status(200)
@@ -112,16 +125,18 @@ exports.getProfilePostByJWT = async (req, res) => {
   }
 };
 
-exports.getProfilePostByJWT = async (req, res) => {
+exports.getProfilePostByJWTForUser = async (req, res) => {
   const { user } = req.user;
   const { id: foraneoid } = user;
   const { page, size } = req.query;
-  const { id: homeid } = req.params.id;
+  const id = req.params.id;
+  console.log(id);
+  console.log(foraneoid);
   try {
     await userService.userExist(id);
     const posts = await postService.getAllUserPostsByIdfromuser(
       foraneoid,
-      homeid,
+      id,
       page,
       size
     );
