@@ -12,7 +12,7 @@ const callback={
     failureRedirect: "/fb/failure"
 }
 
-router.get("/fb",fbStrategy);//Auth fb
+router.get("auth/fb",fbStrategy);//Auth fb
 
 router.get("/fb/callback",
         passport.authenticate("facebook",callback));//callback route
