@@ -143,7 +143,7 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
       const arrayCategories = body.array;
       console.log(`Array : ${arrayCategories}`);
       for(let i=0;i<arrayCategories.length;i++){
-        PostCategory.create({idPost:post.id,idCategory:arrayCategories[i]});
+        PostCategory.create({idPosts:post.id,idCategories:arrayCategories[i]});
           
         console.log(` Categoria 1 : ${arrayCategories[i]}`);
 
