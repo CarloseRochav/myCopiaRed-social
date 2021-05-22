@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
         target: "id",
       });
 
+      Posts.hasOne(models.UsersViews, {
+        foreignKey: "Posts_id",
+        target: "id",
+      });
+
       Posts.belongsTo(models.Users, {
         foreignKey: "Users_id",
         target: "id",

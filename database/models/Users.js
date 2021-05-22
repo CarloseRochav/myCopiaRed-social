@@ -23,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
         target: "id",
       });
 
+      Users.hasOne(models.UsersViews, {
+        foreignKey: "Users_id",
+        target: "id",
+      });
+
       Users.hasOne(models.BlackLists, {
         foreignKey: "Users_id",
         target: "id",

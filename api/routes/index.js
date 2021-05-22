@@ -6,6 +6,8 @@ module.exports = {
   reaccionRoutes: require("./reaccion.routes"),
   interfacesRoutes: require("./interface.routes"),
   categoryRoutes: require("./category.routes"),
-  googleRoutes:require("./google.routes"),
-  fbRoutes:require("./fb.routes")
+  googleRoutes: require("./google.routes"),
+  fbRoutes: require("./fb.routes"),
+  followerRoutes: require("./follower.routes"),
+  viewRoutes: require("./views.routes"),
 };

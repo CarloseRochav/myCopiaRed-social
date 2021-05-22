@@ -8,4 +8,5 @@ module.exports = {
   categoryService: require("./categoryService"),
   commentService: require("./commentService"),
   reaccionService: require("./reaccionService"),
+  followService: require("./followService"),
 };
