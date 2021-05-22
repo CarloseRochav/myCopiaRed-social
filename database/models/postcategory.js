@@ -11,6 +11,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      // PostCategory.hasOne(models.Posts, {
+      //   foreignKey: "Users_id",
+      //   target: "id",
+      // });
+
+      PostCategory.belongsTo(models.Posts, {
+        foreignKey: "Post_id",
+        target: "id",
+      });
+
+      //Pendiente
+      PostCategory.belongsTo(models.Categories, {
+        foreignKey: "Category_id",
+        target: "id",
+      });
     }
   };
   PostCategory.init({

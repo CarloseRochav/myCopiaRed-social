@@ -73,7 +73,7 @@ exports.createPost = async (req, res) => {
   const body = req.body;
   try {
     await userService.userExist(id);
-    await s3Service.uploadVideo(body, fileType, buffer, id);
+    await s3Service.uploadVideo(body, fileType, buffer, id);    
     return res
       .status(200)
       .json({ code: 200, msg: "La publicacion ha sido creada exitosamente" });

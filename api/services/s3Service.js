@@ -4,6 +4,9 @@ const {
   Posts,
   Categories,
   Interfaces,
+  Galleries,
+  PostCategory
+
 } = require("../../database/models");
 const { v4: uuidv4 } = require("uuid");
 const awsConfig = require("../../config/awsConfig/development");
@@ -78,7 +81,7 @@ exports.updateImageBackgroundProfile = async (fileType, buffer, _id) => {
       longitude: req.body.longitude,
       User_id: id,
     });
-    await Gallery.create(
+    await Galleries.create(
       {
         mediaResource:Location,
         User_id:id,
@@ -98,21 +101,22 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
     if (error) {
       throw customError(500, error);
     }
-    const { Location } = data;
+    const { Location } = data;    
 
-    await User.update(
+    await Users.update(
       { backgroundpicture: Location },
       {
         where: {
-          id: _id,
+          id: id,
         },
       }
     );
 
-    await Gallery.create(
+    await Galleries.create(
       {
-        mediaResource:Location,
-        User_id:_id
+        pathResource:Location,
+        keyResource:params.Key,
+        Users_id:id
       }
     )
 
@@ -128,6 +132,28 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
       commentsCount: 0,
       reactionsCount: 0,
     });
+
+    const features ={
+      title:body.title,
+      description:body.description,
+      latitude:body.latitude,
+      longitude:body.longitude
+    }
+
+    const post = await Posts.findOne({where:features});
+
+    console.log(post);
+
+      const arrayCategories = body.array;
+      console.log(`Array : ${arrayCategories}`);
+      for(let i=0;i<arrayCategories.length;i++){
+        PostCategory.create({idPost:post.id,idCategory:arrayCategories[i]});
+          
+        console.log(` Categoria 1 : ${arrayCategories[i]}`);
+
+      }
+   
+
   });
 };
 
