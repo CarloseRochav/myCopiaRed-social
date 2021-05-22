@@ -124,7 +124,7 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
       latitude: body.latitude ? body.latitude : "11111",
       longitude: body.longitude ? body.longitude : "6666",
       Users_id: id,
-      Categories_id: body.Categories_id ? body.Categories_id : 1,
+      //Categories_id: body.Categories_id ? body.Categories_id : 1,
       commentsCount: 0,
       reactionsCount: 0,
     });
@@ -140,12 +140,12 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
 
     console.log(post);
 
-      const arrayCategories = body.array;
-      console.log(`Array : ${arrayCategories}`);
-      for(let i=0;i<arrayCategories.length;i++){
-        PostCategory.create({idPosts:post.id,idCategories:arrayCategories[i]});
+      const Categories = body.Categories;
+      console.log(`Array : ${Categories}`);
+      for(let i=0;i<Categories.length;i++){
+        PostCategory.create({idPosts:post.id,idCategories:Categories[i]});
           
-        console.log(` Categoria 1 : ${arrayCategories[i]}`);
+        console.log(` Categoria 1 : ${Categories[i]}`);
 
       }
    

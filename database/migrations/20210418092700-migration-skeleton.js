@@ -203,15 +203,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDeleted: "CASCADE",
       },
-      Categories_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Categories",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDeleted: "CASCADE",
+      // Categories_id: {
+      //   type: Sequelize.INTEGER,
+      //   allowNull: false,
+      //   references: {
+      //     model: "Categories",
+      //     key: "id",
+      //   },
+      //   onUpdate: "CASCADE",
+      //   onDeleted: "CASCADE",
       },
       createdAt: {
         allowNull: false,

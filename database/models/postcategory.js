@@ -12,8 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       
 
-      PostCategory.belongsTo(models.Posts, {
-        foreignKey: "id",
+      PostCategory.belongsTo(models.Posts, { //
+        foreignKey: "id", //Fk debe ser igual al nombre del id del modelo referenciado
         target: "id",
       });
 
