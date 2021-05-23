@@ -26,9 +26,8 @@ router.delete("/post/:id", authMiddleware, postController.deletePost);
 
 //usertouser
 router.get("/userposts/:id", authMiddleware, postController.getProfilePostById);
+router.get("/allusers" , authMiddleware, postController.AllUsers);
 
-//Views
-// Agregar vista
-//Total de vistas
+router.get("/allpost" , authMiddleware, postController.AllPost);
 
 module.exports = router;

@@ -212,7 +212,7 @@ module.exports = {
       //   },
       //   onUpdate: "CASCADE",
       //   onDeleted: "CASCADE",
-      },
+      //},
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

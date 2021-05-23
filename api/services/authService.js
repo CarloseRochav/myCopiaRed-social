@@ -4,7 +4,6 @@ const { random, customError } = require("../helpers");
 const randomstring = require("randomstring");
 const jwt = require("jsonwebtoken");
 
-
 exports.hashPassword = (password) => {
   const hashPassword = bcrypt.hashSync(password, +rounds);
   return hashPassword;
@@ -32,13 +31,12 @@ exports.createToken = (externalPassword, _userDB) => {
     throw customError(500, "La conseña es incorrecta.");
   }
 
-  const token = jwt.sign(//Generacion de token
+  const token = jwt.sign(
     {
       user: {
         id: id,
-        password: userDB.password,
         email: userDB.email,
-        role: userDB.role_id,
+        Roles_id: userDB.Roles_id,
       },
     },
     secret,
