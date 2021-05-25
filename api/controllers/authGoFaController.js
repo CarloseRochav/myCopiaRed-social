@@ -44,7 +44,7 @@ exports.facebookController=async(req,res,next)=>{
         return res.json({
             code:201,
             msg:{
-                Usuario:"Usuario Credo Exitosamente",
+                Usuario:"Usuario Creado Exitosamente",
                 Aviso:"Por favor ingrese el codigo que se la enviado",
                 Update:"Actualice sus datos"
             }
@@ -61,7 +61,7 @@ exports.facebookController=async(req,res,next)=>{
 
         res.json({
             code:201,
-            msg:"Actualizado y validado",
+            msg:"Inicio de sesion exitoso",
             token:token
         })
     }
@@ -123,7 +123,7 @@ exports.googleController = async (req,res,next)=>{
             return res.json({
                 code:201,
                 msg:{
-                    Usuario:"Usuario Credo Exitosamente",
+                    Usuario:"Usuario Creado Exitosamente",
                     Aviso:"Por favor ingrese el codigo que se la enviado",
                     Update:"Actualice sus datos"
                 }
@@ -148,7 +148,7 @@ exports.googleController = async (req,res,next)=>{
 
         res.json({
             code:201,
-            msg:"Actualizado y validado",
+            msg:"Inicio de sesion exitoso",
             token:token
         })
 
@@ -198,8 +198,12 @@ exports.verifyUser= async (req,res)=>{
         console.log(`ERROR : ${err}`)
         res.json({
             code:501,
-            error: err.message,
+            error: "Revise que los datos ingresados sean correctos",
         })
+        // res.json({
+        //     code:501,
+        //     error: err.message,
+        // })
     }
 
 }

@@ -31,4 +31,8 @@ router.get(
   postController.getProfilePostByJWTForUser
 );
 
+//Views
+// Agregar vista
+//Total de vistas
+
 module.exports = router;
