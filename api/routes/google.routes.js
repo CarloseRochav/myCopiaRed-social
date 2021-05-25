@@ -31,7 +31,7 @@ const callback = passport.authenticate('google',{
 
 //Middleware Google
 router.get(
-  "auth/google",
+  "/auth/google",
   googleOauth);//Dada de alta
 
 //Google Callback
@@ -40,13 +40,13 @@ router.get(
   callback  )
 
 
-router.get("/goo/success",
+router.get("/google/success",
             isLoggedIn,
             googleFacebookController.googleController,
             (req,res)=>{console.log(`Mira que lo habeis hecho : ${req.user}`)}
   )
 
-router.get("/goo/failure",(req,res)=>{
+router.get("/google/failure",(req,res)=>{
       console.log("Error en la matrix pa");
   })
 

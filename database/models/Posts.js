@@ -27,6 +27,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "Categories_id",
         target: "id",
       });
+
+      Posts.hasOne(models.PostCategory, {
+        foreignKey: "idPosts",
+        target: "id",
+      });
     }
   }
   Posts.init(

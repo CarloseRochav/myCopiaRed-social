@@ -5,6 +5,8 @@ const {
   Categories,
   Interfaces,
   Galleries,
+  PostCategory
+
 } = require("../../database/models");
 const { v4: uuidv4 } = require("uuid");
 const awsConfig = require("../../config/awsConfig/development");
@@ -75,10 +77,12 @@ exports.updateImageBackgroundProfile = async (fileType, buffer, _id) => {
       longitude: req.body.longitude,
       User_id: id,
     });
-    await Galleries.create({
-      mediaResource: Location,
-      User_id: id,
-    });
+    await Galleries.create(
+      {
+        mediaResource:Location,
+        User_id:id,
+      }
+    )
   });
 };
 
@@ -93,21 +97,24 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
     if (error) {
       throw customError(500, error);
     }
-    const { Location } = data;
+    const { Location } = data;    
 
-    await User.update(
+    await Users.update(
       { backgroundpicture: Location },
       {
         where: {
-          id: _id,
+          id: id,
         },
       }
     );
 
-    await Galleries.create({
-      mediaResource: Location,
-      User_id: _id,
-    });
+    await Galleries.create(
+      {
+        pathResource:Location,
+        keyResource:params.Key,
+        Users_id:id
+      }
+    )
 
     await Posts.create({
       title: body.title,
@@ -117,10 +124,32 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
       latitude: body.latitude ? body.latitude : "11111",
       longitude: body.longitude ? body.longitude : "6666",
       Users_id: id,
-      Categories_id: body.Categories_id ? body.Categories_id : 1,
+      //Categories_id: body.Categories_id ? body.Categories_id : 1,
       commentsCount: 0,
       reactionsCount: 0,
     });
+
+    const features ={
+      title:body.title,
+      description:body.description,
+      latitude:body.latitude,
+      longitude:body.longitude
+    }
+
+    const post = await Posts.findOne({where:features});
+
+    console.log(post);
+
+      const Categories = body.Categories;
+      console.log(`Array : ${Categories}`);
+      for(let i=0;i<Categories.length;i++){
+        PostCategory.create({idPosts:post.id,idCategories:Categories[i]});
+          
+        console.log(` Categoria 1 : ${Categories[i]}`);
+
+      }
+   
+
   });
 };
 

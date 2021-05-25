@@ -149,31 +149,14 @@ exports.getAUserByJWT = async (req, res) => {
 exports.AllUsers = async (req, res) => {
   const { user } = req;
   const { role } = user;
-  const { roles, blocked } = req.query;
   try {
-    if (role !== 1) {
-      throw customError(404, "No estas Autorizado");
+    if (role === 1) {
+      throw customError(404, "Solo el Admin puede ver este sitio, jaja, noob");
     }
-    if (blocked === null || blocked === "all") {
-      const banner = await Users.count({
-        where: {
-          Roles_id: roles,
-        },
-      });
-      return res.status(200).json({
-        code: 200,
-        msg: `El total de Usuarios  banneados es de : ${banner}`,
-      });
-    }
-    const amount = await Users.count({
-      where: {
-        Roles_id: roles,
-        isBlocked: blocked,
-      },
-    });
+    const amount = await Users.count();
     return res
       .status(200)
-      .json({ code: 200, msg: `El total de Usuarios  es de  ${amount}` });
+      .json({ code: 200, msg: `El total de Usuarios en es de ${amount}` });
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
@@ -185,14 +168,17 @@ exports.AllPost = async (req, res) => {
   const { user } = req;
   const { role } = user;
   try {
-    if (role !== 1) {
+    if (role === 1) {
       throw customError(404, "No tienes acceso, lo sentimos");
     }
+
     const postall = await Posts.count();
-    return res.status(200).json({
-      code: 200,
-      msg: `EL total de publicaciones actualmente es de ${postall}`,
-    });
+    return res
+      .status(200)
+      .json({
+        code: 200,
+        msg: `EL total de publicaciones actualmente es de ${postall}`,
+      });
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)

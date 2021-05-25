@@ -87,7 +87,7 @@ exports.createPost = async (req, res) => {
   const body = req.body;
   try {
     await userService.userExist(id);
-    await s3Service.uploadVideo(body, fileType, buffer, id);
+    await s3Service.uploadVideo(body, fileType, buffer, id);    
     return res
       .status(200)
       .json({ code: 200, msg: "La publicacion ha sido creada exitosamente" });
@@ -126,18 +126,16 @@ exports.getProfilePostByJWT = async (req, res) => {
   }
 };
 
-exports.getProfilePostByJWTForUser = async (req, res) => {
+exports.getProfilePostByJWT = async (req, res) => {
   const { user } = req.user;
   const { id: foraneoid } = user;
   const { page, size } = req.query;
-  const id = req.params.id;
-  console.log(id);
-  console.log(foraneoid);
+  const { id: homeid } = req.params.id;
   try {
     await userService.userExist(id);
     const posts = await postService.getAllUserPostsByIdfromuser(
       foraneoid,
-      id,
+      homeid,
       page,
       size
     );
@@ -146,5 +144,39 @@ exports.getProfilePostByJWTForUser = async (req, res) => {
     return res
       .status(error.code ? error.code : 500)
       .json(error.message ? { code: 500, msg: error.message } : error);
+  }
+};
+
+//Metodo Count
+exports.AllUsers = async (req, res) =>{
+  const { user } = req;
+  const { role } = user;
+  try{
+    if( role === 1){
+      throw customError(404,'Solo el Admin puede ver este sitio, jaja, noob');
+    }
+    const amount = await models.Users.count();
+   return res.status(200).json({ code: 200, msg: `El total de Usuarios en es de ${amount}` });
+
+    }catch (error) {
+    return res.status(error.code ? error.code : 500).json(error.message ? { code: 500, msg: error.message } : error);
+    }
+    
+  };
+
+  //**************METODO COUNT PARA LOS VIDEOS****************** */
+exports.AllPost = async(req, res) => {
+  const { user } = req;
+  const { role } = user;
+  try{
+    if(role === 1){
+      throw customError(404, 'No tienes acceso, lo sentimos');
+    }
+
+    const postall = await models.Posts.count();
+    return res.status(200).json({ code: 200, msg: `EL total de publicaciones actualmente es de ${postall}`});
+
+  }catch (error){
+    return res.status(error.code ? error.code : 500).json(error.message ? { code: 500, msg: error.message } : error);
   }
 };

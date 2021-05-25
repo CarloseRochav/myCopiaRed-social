@@ -10,12 +10,23 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      
+
+      PostCategory.belongsTo(models.Posts, { //
+        foreignKey: "id", //Fk debe ser igual al nombre del id del modelo referenciado
+        target: "id",
+      });
+
+      //Pendiente
+      PostCategory.belongsTo(models.Categories, {
+        foreignKey: "id",
+        target: "id",
+      });
     }
   };
   PostCategory.init({
-    idPost: DataTypes.INTEGER,
-    idCategory: DataTypes.INTEGER
+    idPosts: DataTypes.INTEGER,
+    idCategories: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'PostCategory',

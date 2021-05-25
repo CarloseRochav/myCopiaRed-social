@@ -13,6 +13,7 @@ exports.facebookController=async(req,res,next)=>{
     console.log(`email ${user.emails[0].value}`); 
 
     const userExist = await Users.findOne({where:{idFacebook:user.id}})
+    const emailExist = await Users.findOne({where:{email:user.emails[0].value}});
 
     //Componentes para creacion
     const nameTranformacion = user.displayName.replace(/[\s+.]/gi, '');//Reemplaza puntos y espacios, suprime
@@ -22,6 +23,10 @@ exports.facebookController=async(req,res,next)=>{
     const randomNum = randomNumber();
 
     if(!userExist){
+
+        if(emailExist)res.json({code:500,message:"Ya existe una cuenta con este correo"});
+
+        if(!emailExist){
         const newUser =//Objeto del usuario
         {
             idFacebook:user.id,
@@ -49,6 +54,8 @@ exports.facebookController=async(req,res,next)=>{
                 Update:"Actualice sus datos"
             }
         });
+        
+        }
         
 
     }
@@ -95,10 +102,15 @@ exports.googleController = async (req,res,next)=>{
     
     //const nameRepeat= newNameTrans+user.id;
     const userExist = await Users.findOne({where:{idGoogle:user.id}});   
+    const emailExist = await Users.findOne({where:{email:user.emails[0].value}});
 
     try{
     if(!userExist){
         //const nameUsed = User.findOne({where:{name:newNameTrans}})
+
+        if(emailExist)res.json({code:500,message:"Ya existe una cuenta con este correo"});
+        
+        if(!emailExist){
          
 
             const newUser =//Objeto del usuario
@@ -128,7 +140,9 @@ exports.googleController = async (req,res,next)=>{
                     Update:"Actualice sus datos"
                 }
             });
-        }           
+
+        }
+    }           
         
 
        
