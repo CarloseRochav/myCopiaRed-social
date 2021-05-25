@@ -8,6 +8,7 @@ const {
 
 const { UsersViews } = require("../../database/models");
 
+
 exports.getPost = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
