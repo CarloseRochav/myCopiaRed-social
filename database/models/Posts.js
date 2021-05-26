@@ -23,11 +23,6 @@ module.exports = (sequelize, DataTypes) => {
         target: "id",
       });
 
-      Posts.belongsTo(models.Categories, {
-        foreignKey: "Categories_id",
-        target: "id",
-      });
-
       Posts.hasOne(models.PostCategory, {
         foreignKey: "idPosts",
         target: "id",
@@ -64,10 +59,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
       },
       Users_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      Categories_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

@@ -17,7 +17,7 @@ router.get("/post/:id", postController.getPostById);
 router.get(
   "/myprofile/post",
   authMiddleware,
-  postController.getProfilePostByJWT
+  postController.getMyProfilePostByJWT
 );
 
 router.put("/post/:id", authMiddleware, postController.updatePost);
