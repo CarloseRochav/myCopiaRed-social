@@ -1,4 +1,9 @@
-const { s3Service, userService, blacklistService } = require("../services");
+const {
+  s3Service,
+  userService,
+  blacklistService,
+  followService,
+} = require("../services");
 const { Users, Posts } = require("../../database/models");
 const { customError } = require("../helpers");
 //#region Basic User Methods
@@ -29,8 +34,12 @@ exports.getUserByJWT = async (req, res) => {
   const { user } = req.user;
   const { id } = user;
   try {
-    const user = await userService.getUserById(id);
-    return res.status(200).json({ code: 200, msg: user });
+    let user = await userService.getUserById(id);
+    const followersCount = await followService.totalCountFollowers(id);
+    const MyfollowsCount = await followService.totalCountMyFollowers(id);
+    return res
+      .status(200)
+      .json({ code: 200, msg: user, followersCount, MyfollowsCount });
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
@@ -137,7 +146,18 @@ exports.getAUserByJWT = async (req, res) => {
   const idUserCasa = req.params.id;
   try {
     const user = await userService.userData(id, idUserCasa);
-    return res.status(200).json({ code: 200, msg: user });
+    const followersCount = await followService.totalCountFollowers(idUserCasa);
+    const MyfollowsCount = await followService.totalCountMyFollowers(
+      idUserCasa
+    );
+    const iAmFollower = await followService.iAmFollow(id, idUserCasa);
+    return res.status(200).json({
+      code: 200,
+      msg: user,
+      followersCount,
+      MyfollowsCount,
+      iAmFollower,
+    });
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)
@@ -173,12 +193,10 @@ exports.AllPost = async (req, res) => {
     }
 
     const postall = await Posts.count();
-    return res
-      .status(200)
-      .json({
-        code: 200,
-        msg: `EL total de publicaciones actualmente es de ${postall}`,
-      });
+    return res.status(200).json({
+      code: 200,
+      msg: `EL total de publicaciones actualmente es de ${postall}`,
+    });
   } catch (error) {
     return res
       .status(error.code ? error.code : 500)

@@ -27,12 +27,12 @@ router.delete("/post/:id", authMiddleware, postController.deletePost);
 router.get(
   "/userposts/:id",
   authMiddleware,
-  postController.get
+  postController.getProfilePostByJWTForUser
 );
 
 router.get("/userposts/:id", authMiddleware, postController.getProfilePostById);
-router.get("/allusers" , authMiddleware, postController.AllUsers);
+router.get("/allusers", authMiddleware, postController.AllUsers);
 
-router.get("/allpost" , authMiddleware, postController.AllPost);
+router.get("/allpost", authMiddleware, postController.AllPost);
 
 module.exports = router;
