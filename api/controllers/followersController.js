@@ -33,8 +33,18 @@ exports.deleteFollow = async (req, res) => {
 };
 
 exports.totalCountFollowers = async (req, res) => {
-  const { user } = req.user;
-  const { id } = user;
+  const idFollowing = req.params.id;
+  try {
+    const totalCount = await followService.totalCountFollowers(idFollowing);
+    return res.status(200).json({ code: 200, msg: totalCount });
+  } catch (error) {
+    return res
+      .status(error.code ? error.code : 500)
+      .json(error.message ? { code: 500, msg: error.message } : error);
+  }
+};
+
+exports.totalCountMyFollows = async (req, res) => {
   const idFollowing = req.params.id;
   try {
     const totalCount = await followService.totalCountFollowers(idFollowing);

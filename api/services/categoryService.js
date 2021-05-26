@@ -10,10 +10,11 @@ exports.getCategories = async () => {
 };
 
 exports.createCategories = async (_name, locale) => {
-  await Categories.create({
+  const newCategory = await Categories.create({
     name: _name,
     picture: locale,
   });
+  return newCategory;
 };
 
 exports.destroyCategories = async (_id) => {

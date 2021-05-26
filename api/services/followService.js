@@ -51,7 +51,19 @@ exports.totalCountFollowers = async (idFollowing) => {
     },
   });
   if (!totalCount) {
-    throw customError(500, "No tiene seguidores");
+    throw customError(200, "No tiene seguidores");
+  }
+  return totalCount;
+};
+
+exports.totalCountMyFollowers = async (idFollowing) => {
+  const totalCount = await Followers.findAndCountAll({
+    where: {
+      Users_id: idFollowing,
+    },
+  });
+  if (!totalCount) {
+    throw customError(200, "No tiene seguidores");
   }
   return totalCount;
 };
@@ -64,7 +76,20 @@ exports.allFollowers = async (idFollowing) => {
     },
   });
   if (!totalFollowers) {
-    throw customError(500, "No tiene seguidores");
+    throw customError(200, "No tiene seguidores");
   }
   return totalFollowers;
+};
+
+exports.iAmFollow = async (idFollower, idFollowing) => {
+  const siguiendo = await Followers.findOne({
+    where: {
+      Users_id: idFollower,
+      UserFollowed_id: idFollowing,
+    },
+  });
+  if (siguiendo) {
+    return true;
+  }
+  return false;
 };

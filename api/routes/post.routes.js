@@ -17,7 +17,7 @@ router.get("/post/:id", postController.getPostById);
 router.get(
   "/myprofile/post",
   authMiddleware,
-  postController.getProfilePostByJWT
+  postController.getMyProfilePostByJWT
 );
 
 router.put("/post/:id", authMiddleware, postController.updatePost);
@@ -31,8 +31,8 @@ router.get(
 );
 
 router.get("/userposts/:id", authMiddleware, postController.getProfilePostById);
-router.get("/allusers" , authMiddleware, postController.AllUsers);
+router.get("/allusers", authMiddleware, postController.AllUsers);
 
-router.get("/allpost" , authMiddleware, postController.AllPost);
+router.get("/allpost", authMiddleware, postController.AllPost);
 
 module.exports = router;
