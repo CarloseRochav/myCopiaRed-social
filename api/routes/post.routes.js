@@ -27,7 +27,7 @@ router.delete("/post/:id", authMiddleware, postController.deletePost);
 router.get(
   "/userposts/:id",
   authMiddleware,
-  postController.getProfilePostByJWTForUser
+  postController.get
 );
 
 router.get("/userposts/:id", authMiddleware, postController.getProfilePostById);
