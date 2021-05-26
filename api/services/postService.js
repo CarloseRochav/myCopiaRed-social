@@ -39,6 +39,12 @@ exports.getPosts = async (page, size, id) => {
       {
         model: PostCategory,
         attributes: ["idCategories"],
+        include: [
+          {
+            model: Categories,
+            attributes: ["name"],
+          },
+        ],
       },
     ],
   });
@@ -84,6 +90,12 @@ exports.getAllUserPostsById = async (userId, page, size) => {
       {
         model: PostCategory,
         attributes: ["idCategories"],
+        include: [
+          {
+            model: Categories,
+            attributes: ["name"],
+          },
+        ],
       },
     ],
     where: { Users_id: userId },
@@ -183,6 +195,12 @@ exports.getAllUserPostsByIdfromuser = async (userId, profileid, page, size) => {
       {
         model: PostCategory,
         attributes: ["idCategories"],
+        include: [
+          {
+            model: Categories,
+            attributes: ["name"],
+          },
+        ],
       },
     ],
     where: { Users_id: profileid },
