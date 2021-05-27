@@ -1,4 +1,4 @@
-const { Followers } = require("../../database/models");
+const { Followers, Users, Sequelize } = require("../../database/models");
 const { customError } = require("../helpers");
 
 //Usuario Siguiendo a otro
@@ -70,7 +70,13 @@ exports.totalCountMyFollowers = async (idFollowing) => {
 
 //Ver todos los Seguidores de un usuario
 exports.allFollowers = async (idFollowing) => {
-  const totalFollowers = await Followers.count({
+  const totalFollowers = await Followers.findAll({
+    attributes: [["id", "id"]],
+    include: [
+      {
+        model: Users,
+      },
+    ],
     where: {
       UserFollowed_id: idFollowing,
     },
