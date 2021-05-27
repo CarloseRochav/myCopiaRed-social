@@ -1,6 +1,4 @@
-'use strict';
-
-const { sequelize } = require("../models");
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -41,7 +39,7 @@ module.exports = {
         onUpdate: "CASCADE",
         onDeleted: "CASCADE",
       },
-      
+
       Active: {
         type: Sequelize.BOOLEAN,
       },
@@ -58,6 +56,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-   await queryInterface.dropTable("ReportLists");
-  }
+    await queryInterface.dropTable("ReportLists");
+  },
 };

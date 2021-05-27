@@ -5,8 +5,7 @@ const {
   Categories,
   Interfaces,
   Galleries,
-  PostCategory
-
+  PostCategory,
 } = require("../../database/models");
 const { v4: uuidv4 } = require("uuid");
 const awsConfig = require("../../config/awsConfig/development");
@@ -67,22 +66,10 @@ exports.updateImageBackgroundProfile = async (fileType, buffer, _id) => {
         },
       }
     );
-
-    await Post.create({
-      title: req.body.title,
-      description: req.body.description,
-      video: Location,
-      thumbnail: Localtion,
-      latitude: req.body.latitude,
-      longitude: req.body.longitude,
+    await Galleries.create({
+      mediaResource: Location,
       User_id: id,
     });
-    await Galleries.create(
-      {
-        mediaResource:Location,
-        User_id:id,
-      }
-    )
   });
 };
 
@@ -97,26 +84,15 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
     if (error) {
       throw customError(500, error);
     }
-    const { Location } = data;    
+    const { Location } = data;
 
-    await Users.update(
-      { backgroundpicture: Location },
-      {
-        where: {
-          id: id,
-        },
-      }
-    );
+    await Galleries.create({
+      pathResource: Location,
+      keyResource: params.Key,
+      Users_id: id,
+    });
 
-    await Galleries.create(
-      {
-        pathResource:Location,
-        keyResource:params.Key,
-        Users_id:id
-      }
-    )
-
-    await Posts.create({
+    const newPost = await Posts.create({
       title: body.title,
       description: body.description,
       video: Location,
@@ -128,27 +104,16 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
       reactionsCount: 0,
     });
 
-    const features ={
-      title:body.title,
-      description:body.description,
-      latitude:body.latitude,
-      longitude:body.longitude
+    const categories = body.Categories;
+    let str = categories;
+    let array = str.split(",");
+
+    for (let i = 0; i < array.length; i++) {
+      await PostCategory.create({
+        idPosts: newPost.id,
+        idCategories: array[i],
+      });
     }
-
-    const post = await Posts.findOne({where:features});
-
-    console.log(post);
-
-      const Categories = body.Categories;
-      console.log(`Array : ${Categories}`);
-      for(let i=0;i<Categories.length;i++){
-        PostCategory.create({idPosts:post.id,idCategories:Categories[i]});
-          
-        console.log(` Categoria 1 : ${Categories[i]}`);
-
-      }
-   
-
   });
 };
 

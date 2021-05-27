@@ -1,4 +1,4 @@
-const { Followers } = require("../../database/models");
+const { Followers, Users, Sequelize } = require("../../database/models");
 const { customError } = require("../helpers");
 
 //Usuario Siguiendo a otro
@@ -51,20 +51,51 @@ exports.totalCountFollowers = async (idFollowing) => {
     },
   });
   if (!totalCount) {
-    throw customError(500, "No tiene seguidores");
+    throw customError(200, "No tiene seguidores");
+  }
+  return totalCount;
+};
+
+exports.totalCountMyFollowers = async (idFollowing) => {
+  const totalCount = await Followers.findAndCountAll({
+    where: {
+      Users_id: idFollowing,
+    },
+  });
+  if (!totalCount) {
+    throw customError(200, "No tiene seguidores");
   }
   return totalCount;
 };
 
 //Ver todos los Seguidores de un usuario
 exports.allFollowers = async (idFollowing) => {
-  const totalFollowers = await Followers.count({
+  const totalFollowers = await Followers.findAll({
+    attributes: [["id", "id"]],
+    include: [
+      {
+        model: Users,
+      },
+    ],
     where: {
       UserFollowed_id: idFollowing,
     },
   });
   if (!totalFollowers) {
-    throw customError(500, "No tiene seguidores");
+    throw customError(200, "No tiene seguidores");
   }
   return totalFollowers;
+};
+
+exports.iAmFollow = async (idFollower, idFollowing) => {
+  const siguiendo = await Followers.findOne({
+    where: {
+      Users_id: idFollower,
+      UserFollowed_id: idFollowing,
+    },
+  });
+  if (siguiendo) {
+    return true;
+  }
+  return false;
 };

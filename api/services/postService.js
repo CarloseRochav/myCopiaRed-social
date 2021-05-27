@@ -3,6 +3,7 @@ const {
   Users,
   Reactions,
   Categories,
+  PostCategory,
 } = require("../../database/models");
 const { customError, getPagination, getPagingData } = require("../helpers");
 
@@ -34,6 +35,16 @@ exports.getPosts = async (page, size, id) => {
           Users_id: id,
         },
         required: false,
+      },
+      {
+        model: PostCategory,
+        attributes: ["idCategories"],
+        include: [
+          {
+            model: Categories,
+            attributes: ["name"],
+          },
+        ],
       },
     ],
   });
@@ -75,6 +86,16 @@ exports.getAllUserPostsById = async (userId, page, size) => {
           Users_id: userId,
         },
         required: false,
+      },
+      {
+        model: PostCategory,
+        attributes: ["idCategories"],
+        include: [
+          {
+            model: Categories,
+            attributes: ["name"],
+          },
+        ],
       },
     ],
     where: { Users_id: userId },
@@ -170,6 +191,16 @@ exports.getAllUserPostsByIdfromuser = async (userId, profileid, page, size) => {
           Users_id: userId,
         },
         required: false,
+      },
+      {
+        model: PostCategory,
+        attributes: ["idCategories"],
+        include: [
+          {
+            model: Categories,
+            attributes: ["name"],
+          },
+        ],
       },
     ],
     where: { Users_id: profileid },
