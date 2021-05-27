@@ -123,8 +123,7 @@ exports.uploadVideo = async (body, fileType, buffer, id) => {
       thumbnail: Location,
       latitude: body.latitude ? body.latitude : "11111",
       longitude: body.longitude ? body.longitude : "6666",
-      Users_id: id,
-      //Categories_id: body.Categories_id ? body.Categories_id : 1,
+      Users_id: id,      
       commentsCount: 0,
       reactionsCount: 0,
     });

@@ -13,13 +13,13 @@ module.exports = (sequelize, DataTypes) => {
       
 
       PostCategory.belongsTo(models.Posts, { //
-        foreignKey: "id", //Fk debe ser igual al nombre del id del modelo referenciado
+        foreignKey: "idPosts", //Fk debe ser igual al nombre del id del modelo referenciado
         target: "id",
       });
 
       //Pendiente
       PostCategory.belongsTo(models.Categories, {
-        foreignKey: "id",
+        foreignKey: "idCategories",
         target: "id",
       });
     }

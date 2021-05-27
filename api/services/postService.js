@@ -22,7 +22,6 @@ exports.getPosts = async (page, size, id) => {
       "longitude",
       "commentsCount",
       "reactionsCount",
-      "Categories_id",
     ],
     limit: limit,
     offset: offset,
@@ -35,10 +34,6 @@ exports.getPosts = async (page, size, id) => {
           Users_id: id,
         },
         required: false,
-      },
-      {
-        model: Categories,
-        attributes: ["name", "picture", "description"],
       },
     ],
   });
@@ -80,10 +75,6 @@ exports.getAllUserPostsById = async (userId, page, size) => {
           Users_id: userId,
         },
         required: false,
-      },
-      {
-        model: Categories,
-        attributes: ["name", "picture", "description"],
       },
     ],
     where: { Users_id: userId },
@@ -179,10 +170,6 @@ exports.getAllUserPostsByIdfromuser = async (userId, profileid, page, size) => {
           Users_id: userId,
         },
         required: false,
-      },
-      {
-        model: Categories,
-        attributes: ["name", "picture", "description"],
       },
     ],
     where: { Users_id: profileid },
