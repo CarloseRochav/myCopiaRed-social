@@ -61,7 +61,7 @@ app.listen(port, "0.0.0.0", () => {
   console.log(`El servidor esta funcionando en el puerto ${port}`);
 
   //Verificamos que este listo para enviar correos.
-  transporterNew
+  transporter
     .verify()
     .then(() => {
       console.log("Listo para enviar correos");
