@@ -12,8 +12,8 @@ const{GOOGLE_OAUTH_ID,GOOGLE_OAUTH_KEY,FB_CLIENT,FB_SECRET}=require('../../confi
 // const idfb="502440277579161";
 //Autentificacion con FACEBOOK
 passport.use(new fbStrategy({
-    clientID:"522071185645102",
-    clientSecret:"330d361ea03dd8010e2d5683e7165b45",
+    clientID:FB_CLIENT,
+    clientSecret:FB_SECRET,
     callbackURL:"http://localhost:8080/fb/callback",
     //callbackURL:"https://damp-beyond-72658.herokuapp.com/fb/callback",
     profileFields: ['id', 'displayName', 'name', 'emails','picture']//Super importante indicar los cambos que vamos a necesitar

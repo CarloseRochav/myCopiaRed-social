@@ -1,8 +1,8 @@
-const { transporter } = require("../../config/nodeMailerConfig/development");
+const { transporter,transporterNew } = require("../../config/nodeMailerConfig/development");
 const { NODE_MAILER_EMAIL } = require("../../config/enviromentVars");
 
 exports.sendConfirmEmail = async (userEmail, randomNumber) => {
-  await transporter.sendMail({
+  await transporterNew.sendMail({
     from: NODE_MAILER_EMAIL,
     to: userEmail,
     subject: "Confirmar Cuenta",

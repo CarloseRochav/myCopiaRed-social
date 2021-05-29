@@ -14,7 +14,7 @@ const {
   followerRoutes,
   viewRoutes,
 } = require("./api/routes"); //Import Routes
-const { transporter } = require("./config/nodeMailerConfig/development");
+const { transporter,transporterNew } = require("./config/nodeMailerConfig/development");
 
 // Crear el servidor
 const app = express();
@@ -61,7 +61,7 @@ app.listen(port, "0.0.0.0", () => {
   console.log(`El servidor esta funcionando en el puerto ${port}`);
 
   //Verificamos que este listo para enviar correos.
-  transporter
+  transporterNew
     .verify()
     .then(() => {
       console.log("Listo para enviar correos");
