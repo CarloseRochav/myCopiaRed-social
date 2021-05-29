@@ -1,5 +1,4 @@
 const nodemailer = require("nodemailer");
-const {google} = require("googleapis");
 const {GOOGLE_OAUTH_ID,GOOGLE_OAUTH_KEY,GOOGLE_PASS_APP}=require("../enviromentVars");//Credenciales de servicio de google
 
 //Configuracion actual
