@@ -14,7 +14,7 @@ const {
   followerRoutes,
   viewRoutes,
 } = require("./api/routes"); //Import Routes
-const { transporter } = require("./config/nodeMailerConfig/development");
+const { transporter,transporterNew } = require("./config/nodeMailerConfig/development");
 
 // Crear el servidor
 const app = express();

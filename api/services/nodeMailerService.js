@@ -1,4 +1,4 @@
-const { transporter } = require("../../config/nodeMailerConfig/development");
+const { transporter,transporterNew } = require("../../config/nodeMailerConfig/development");
 const { NODE_MAILER_EMAIL } = require("../../config/enviromentVars");
 
 exports.sendConfirmEmail = async (userEmail, randomNumber) => {
