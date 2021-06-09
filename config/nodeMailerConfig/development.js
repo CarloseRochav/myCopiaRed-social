@@ -1,4 +1,7 @@
 const nodemailer = require("nodemailer");
+const {GOOGLE_OAUTH_ID,GOOGLE_OAUTH_KEY,GOOGLE_PASS_APP}=require("../enviromentVars");//Credenciales de servicio de google
+
+//Configuracion actual
 
 const {
   NODE_MAILER_EMAIL,
@@ -11,6 +14,7 @@ exports.transporter = nodemailer.createTransport({
   secure: true,
   auth: {
     user: NODE_MAILER_EMAIL,
-    pass: NODE_MAILER_PASSWORD,
+    pass: GOOGLE_PASS_APP,
   },
 });
+

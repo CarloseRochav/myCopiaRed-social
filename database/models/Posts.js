@@ -23,7 +23,12 @@ module.exports = (sequelize, DataTypes) => {
         target: "id",
       });
 
-      Posts.hasMany(models.PostCategory, {
+      // Posts.belongsTo(models.Categories, {
+      //   foreignKey: "Categories_id",
+      //   target: "id",
+      // });
+
+      Posts.hasOne(models.PostCategory, {
         foreignKey: "idPosts",
         target: "id",
       });
@@ -62,6 +67,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      // Categories_id: {
+      //   type: DataTypes.INTEGER,
+      //   allowNull: false,
+      // },
     },
     {
       sequelize,
